@@ -1,0 +1,14 @@
+{
+  "evidenceType": "sanitized-summary",
+  "endpoint": "POST /employees",
+  "authenticationSent": false,
+  "scenarios": [
+    { "scenario": "name ausente", "expectedStatus": 400, "observedStatus": 201 },
+    { "scenario": "name nulo", "expectedStatus": 400, "observedStatus": 201 },
+    { "scenario": "name numérico", "expectedStatus": 400, "observedStatus": 201 },
+    { "scenario": "name somente com espaços", "expectedStatus": 400, "observedStatus": 201 },
+    { "scenario": "birthDay no futuro (2099-01-01)", "expectedStatus": 400, "observedStatus": 201 }
+  ],
+  "cleanup": "Todos os registros retornados com ID foram removidos pelo próprio teste (DELETE 200).",
+  "personalData": "Nenhum dado real foi utilizado ou preservado."
+}

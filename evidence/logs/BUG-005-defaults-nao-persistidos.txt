@@ -1,0 +1,16 @@
+Data: 17/07/2026
+
+Valores exibidos antes do envio, sem interação nos seletores:
+- Cargo: Cargo 01
+- Atividade: Ativid 01
+- EPI: Capacete de segurança
+
+Valores observados na resposta POST criada pelo próprio teste:
+- role: ""
+- activity: campo ausente
+- epi: campo ausente
+
+Status HTTP: 201 Created
+Limpeza: DELETE 200 no registro QA criado pelo teste.
+
+Automação: tests/web/employee-registration.spec.js

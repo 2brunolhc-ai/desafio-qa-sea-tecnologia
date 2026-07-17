@@ -1,0 +1,11 @@
+Data: 17/07/2026
+
+Execução manual com registro "QA Automacao Defaults [IDENTIFICADOR]":
+- O formulário fechou após Salvar.
+- O POST concluiu e o registro foi localizado pela API (GET 200).
+- O nome do registro não apareceu na listagem naquele momento.
+- Após recarregar a página, o registro apareceu.
+- O registro QA foi removido ao final (DELETE 200).
+
+Frequência observada: 1 ocorrência em 2 cadastros manuais.
+Classificação: defeito confirmado intermitente; não automatizado para evitar uma asserção deliberadamente instável.

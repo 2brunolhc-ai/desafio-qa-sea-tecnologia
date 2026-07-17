@@ -1,0 +1,59 @@
+### Evidência sanitizada — nenhum cookie, token ou credencial foi enviado
+
+GET /employees HTTP/1.1
+Host: analista-teste.seatecnologia.com.br
+Accept: application/json
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Access-Control-Allow-Origin: *, *
+
+[
+  {
+    "id": "[OCULTADO]",
+    "state": {
+      "employee": {
+        "isActive": "[TIPO BOOLEANO OBSERVADO]",
+        "name": "[DADO OCULTADO]",
+        "gender": "[DADO OCULTADO]",
+        "cpf": "[DADO OCULTADO]",
+        "birthDay": "[DADO OCULTADO]",
+        "rg": "[DADO OCULTADO]",
+        "role": "[DADO OCULTADO]",
+        "usesEpi": "[TIPO BOOLEANO OBSERVADO]",
+        "activity": "[DADO OCULTADO]",
+        "caNumber": "[DADO OCULTADO]"
+      }
+    }
+  }
+]
+
+### Alteração executada somente em registro QA criado pelo teste
+
+PATCH /employees/[ID-DO-REGISTRO-QA] HTTP/1.1
+Host: analista-teste.seatecnologia.com.br
+Content-Type: application/json
+
+{
+  "state": {
+    "employee": {
+      "name": "QA Automacao [IDENTIFICADOR]",
+      "role": "Cargo 03"
+    }
+  }
+}
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "id": "[ID-DO-REGISTRO-QA]",
+  "state": {
+    "employee": {
+      "name": "QA Automacao [IDENTIFICADOR]",
+      "role": "Cargo 03"
+    }
+  }
+}
+
+Observação: o corpo acima foi reduzido e mascarado. O registro QA foi excluído depois da validação.

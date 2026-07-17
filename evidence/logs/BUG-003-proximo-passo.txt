@@ -1,0 +1,14 @@
+Data: 17/07/2026
+URL inicial: https://analista-teste.seatecnologia.com.br/
+
+1. O controle "A etapa está concluída?" foi alterado de Não para Sim.
+2. O atributo aria-checked mudou de false para true.
+3. O botão "Próximo passo" foi acionado.
+
+Resultado observado:
+- URL alterada: não.
+- Título alterado: não.
+- Cabeçalho "Funcionário(s)" permaneceu visível: sim.
+- O estado concluído permaneceu marcado, mas nenhuma navegação ou conteúdo novo apareceu.
+
+Automação: tests/web/employee-list.spec.js

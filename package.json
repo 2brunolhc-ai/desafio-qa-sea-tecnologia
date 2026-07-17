@@ -1,0 +1,18 @@
+{
+  "name": "desafio-qa-sea-tecnologia",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Exploração, automação e documentação QA da aplicação de cadastro de trabalhadores.",
+  "scripts": {
+    "test": "playwright test",
+    "test:web": "playwright test tests/web",
+    "test:api": "playwright test tests/api",
+    "test:headed": "playwright test tests/web --headed",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.55.1"
+  }
+}

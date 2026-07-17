@@ -1,0 +1,11 @@
+Data: 17/07/2026
+
+Contagem por rótulo acessível no formulário:
+- getByLabel("Nome"): 0
+- getByLabel("CPF"): 0
+- getByLabel("Data de nascimento"): 0
+- getByLabel("RG"): 0
+
+Os elementos label usam atributos for, mas os inputs correspondentes não possuem IDs compatíveis.
+
+Automação: tests/web/employee-validation.spec.js
