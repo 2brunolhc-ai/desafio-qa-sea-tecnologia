@@ -4,7 +4,7 @@
 
 - Objetivo: avaliar cadastro, API, integração, segurança e privacidade.
 - Restrições: ambiente compartilhado, sem dados reais e sem ações destrutivas em terceiros.
-- Resultado: 23 testes; 12 aprovados, 11 reprovados; sete defeitos confirmados.
+- Resultado: suíte-base com 23 testes (12 aprovados, 11 reprovados) e auditoria profunda com 31 cenários adicionais; os testes negativos permanecem vermelhos para evidenciar defeitos.
 
 ## 2. Entendimento do sistema — 5 minutos
 
@@ -18,7 +18,7 @@
 - Risco primeiro: acesso anônimo, integridade e persistência.
 - Dados únicos `QA Automacao` e limpeza em `finally`.
 - Um worker para reduzir impacto.
-- Fora do escopo: carga, invasivo, browsers completos, dispositivos e upload.
+- Fora do escopo: carga, invasivo, browsers completos, dispositivos e documentos ASO reais; o upload foi exercitado com arquivo sintético.
 
 ## 4. Defeitos principais — 9 minutos
 
@@ -26,6 +26,8 @@
 2. **BUG-002:** cinco payloads inválidos retornam 201.
 3. **BUG-005:** defaults exibidos não chegam à API.
 4. **BUG-004:** mostrar screenshot em 390 px.
+
+Na rodada profunda, demonstrar também BUG-008 (atividade submete), BUG-010 (ASO não enviado), BUG-011 (500 fecha sem feedback), BUG-012/013 (menus sem ação) e BUG-014/015 (estados da lista e recorte). O roteiro detalhado está em `docs/bug-report-deep-audit.md`.
 
 Explicar por que segurança/validação são altas e os defeitos de interface são médios.
 
@@ -70,7 +72,7 @@ Há exposição e escrita anônimas, mas não foi demonstrado comprometimento ad
 
 ### O que não foi testado?
 
-Carga, invasivo, browsers completos, dispositivos, upload e acessibilidade completa; há justificativas de risco e ambiente.
+Carga, invasivo, browsers completos, dispositivos, validações de tamanho/tipo do upload e acessibilidade completa; há justificativas de risco e ambiente.
 
 ### Como evitar dados duplicados?
 

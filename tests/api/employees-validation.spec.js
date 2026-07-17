@@ -8,29 +8,74 @@ import { cleanupEmployee, createEmployee } from '../helpers/apiHelpers.js';
 const invalidScenarios = [
   {
     title: 'rejeita trabalhador sem nome',
-    build: () => createInvalidEmployeeData({ cpf: '00000000000' }).data,
+    build: () => createInvalidEmployeeData({ cpf: '00000000000' }),
   },
   {
     title: 'rejeita nome nulo',
-    build: () => createInvalidEmployeeData({ name: null, cpf: '00000000000' }).data,
+    build: () => createInvalidEmployeeData({ name: null, cpf: '00000000000' }),
   },
   {
     title: 'rejeita nome com tipo numérico',
-    build: () => createInvalidEmployeeData({ name: 12345, cpf: '00000000000' }).data,
+    build: () => createInvalidEmployeeData({ name: 12345, cpf: '00000000000' }),
   },
   {
     title: 'rejeita nome contendo somente espaços',
-    build: () => createInvalidEmployeeData({ name: '   ', cpf: '00000000000' }).data,
+    build: () => createInvalidEmployeeData({ name: '   ', cpf: '00000000000' }),
   },
   {
     title: 'rejeita data de nascimento futura',
-    build: () => createEmployeeData({ birthDay: '2099-01-01' }),
+    build: () => {
+      const data = createEmployeeData({ birthDay: '2099-01-01' });
+      return { marker: data.state.employee.name, data };
+    },
+  },
+  {
+    title: 'rejeita nome vazio',
+    build: () => createInvalidEmployeeData({ name: '', cpf: '00000000000' }),
+  },
+  {
+    title: 'rejeita nome excessivamente longo',
+    build: () => createInvalidEmployeeData({ name: 'A'.repeat(300), cpf: '00000000000' }),
+  },
+  {
+    title: 'rejeita data de nascimento com calendário inválido',
+    build: () => createInvalidEmployeeData({ birthDay: '2024-13-40', cpf: '00000000000' }),
+  },
+  {
+    title: 'rejeita CPF com letras',
+    build: () => createInvalidEmployeeData({ cpf: 'ABC12345678' }),
+  },
+  {
+    title: 'rejeita CPF curto',
+    build: () => createInvalidEmployeeData({ cpf: '123' }),
+  },
+  {
+    title: 'rejeita gênero fora do domínio',
+    build: () => createInvalidEmployeeData({ gender: 'outro' }),
+  },
+  {
+    title: 'rejeita isActive com tipo textual',
+    build: () => createInvalidEmployeeData({ isActive: 'sim' }),
+  },
+  {
+    title: 'rejeita estado ausente',
+    build: () => {
+      const { marker } = createInvalidEmployeeData();
+      return { marker, data: { testMarker: marker } };
+    },
+  },
+  {
+    title: 'rejeita funcionário nulo',
+    build: () => {
+      const { marker } = createInvalidEmployeeData();
+      return { marker, data: { state: { testMarker: marker, employee: null } } };
+    },
   },
 ];
 
 for (const scenario of invalidScenarios) {
   test(scenario.title, async ({ request }) => {
-    const data = scenario.build();
+    const { marker, data } = scenario.build();
     let created;
     let response;
 
@@ -39,7 +84,7 @@ for (const scenario of invalidScenarios) {
       response = creation.response;
       if (response.status() === 201) created = creation.body;
 
-      expect(response.status()).toBe(400);
+      expect([400, 422]).toContain(response.status());
     } finally {
       await cleanupEmployee(request, created);
     }

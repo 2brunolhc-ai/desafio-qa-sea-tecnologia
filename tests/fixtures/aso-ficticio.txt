@@ -1,0 +1,1 @@
+Arquivo sintético sem dados pessoais, usado apenas para validar o campo opcional de ASO.

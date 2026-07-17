@@ -1,0 +1,11 @@
+Execução final — 17/07/2026
+
+Comando: npm test -- --reporter=line
+Total: 49
+Aprovados: 13
+Reprovados: 36
+Duração: aproximadamente 2,5 minutos
+Node --check: 0 erros
+Limpeza final: 0 registros com prefixo QA Automacao
+
+As reprovações são expectativas de segurança, validação e UX que o produto não atende. Não foram convertidas em passes condicionais.

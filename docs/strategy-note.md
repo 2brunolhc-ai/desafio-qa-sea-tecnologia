@@ -26,6 +26,8 @@ Cadastro e `/employees` foram priorizados porque concentram entrada, armazenamen
 - Listagem, filtro de ativos e reload.
 - API → interface e interface → API.
 - Próximo passo, associação de rótulos e viewport de 390 px.
+- Controles de cadastro secundários, menus laterais, etapas, estados vazio/carregando/erro e overflow de lista.
+- Métodos PUT/DELETE/GET por ID e diretiva de cache, sempre usando apenas registros próprios.
 
 ## O que permaneceu manual
 
@@ -39,8 +41,8 @@ Cadastro e `/employees` foram priorizados porque concentram entrada, armazenamen
 - Carga, estresse, força bruta e pentest invasivo: risco ao ambiente compartilhado.
 - Alteração/exclusão de dados alheios: limite ético obrigatório.
 - Browsers adicionais e dispositivos físicos: menor risco que autenticação e integridade.
-- Upload de ASO: menor prioridade e potencial de ampliar dados armazenados.
-- Acessibilidade completa: somente rótulos foram cobertos.
+- Upload de ASO real: foi substituído por arquivo sintético; não houve documento ocupacional verdadeiro.
+- Acessibilidade completa: foram adicionadas verificações de semântica dos ícones, mas não uma auditoria com leitor de tela.
 - Query strings não usadas pela UI: contrato ausente e benefício menor.
 - Busca, paginação, ordenação, edição e detalhes na UI: funcionalidades não existem na tela observada.
 
@@ -54,7 +56,7 @@ Cadastro e `/employees` foram priorizados porque concentram entrada, armazenamen
 ## Com mais tempo
 
 - Alinhar contrato e regras de negócio com produto.
-- Cobrir upload com arquivo sintético permitido.
+- Validar tipo, tamanho, erro de upload e persistência depois que o produto passar a enviar o arquivo.
 - Testar navegadores adicionais e breakpoints intermediários.
 - Validar estados de erro com mock de rede controlado.
 - Executar auditoria de acessibilidade completa.

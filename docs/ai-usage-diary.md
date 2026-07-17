@@ -2,7 +2,7 @@
 
 ## Contexto
 
-A IA foi usada como apoio durante uma sessão técnica em 17/07/2026. A responsabilidade de validar o comportamento, decidir severidade, preservar dados e aceitar ou rejeitar sugestões permaneceu humana. Nenhum defeito foi incluído apenas porque apareceu em uma sugestão ou na leitura do código do frontend.
+A IA foi usada extensivamente durante uma sessão técnica em 17/07/2026: ajudou a planejar, escrever e revisar a automação, explorar a interface/API, produzir evidências e redigir os documentos. A responsabilidade de validar o comportamento, decidir severidade, preservar dados e aceitar ou rejeitar sugestões permaneceu humana. Nenhum defeito foi incluído apenas porque apareceu em uma sugestão ou na leitura do código do frontend.
 
 ## Onde a IA ajudou
 
@@ -12,6 +12,7 @@ A IA foi usada como apoio durante uma sessão técnica em 17/07/2026. A responsa
 - Sugestão de cenários de contrato, validação, integração e segurança.
 - Rascunho de documentação, posteriormente confrontado com as execuções.
 - Identificação de trechos relevantes no bundle público para localizar a URL da API e entender o formato `{ state: { employee } }`.
+- Execução de uma segunda rodada profunda com mocks de estados vazio, carregando e erro, lista longa, menus e controles de etapas.
 
 ## Sugestões aproveitadas
 
@@ -29,6 +30,7 @@ A IA foi usada como apoio durante uma sessão técnica em 17/07/2026. A responsa
 3. **ID de seletor dinâmico.** Durante a exploração, um input Ant Design mudou de `rc_select_2` para `rc_select_3` após renderização. A tentativa baseada nesse ID foi descartada. A automação final usa o atributo `title` da seleção/opção dentro do componente.
 4. **Captura visual em branco.** O primeiro mecanismo de screenshot retornou somente o fundo, apesar da árvore acessível estar carregada. A imagem foi considerada inválida e substituída por capturas produzidas pelo Chromium do Playwright.
 5. **Risco de severidade exagerada.** CORS amplo foi analisado como fator agravante, não como vulnerabilidade crítica isolada. Ausência de headers foi mantida como hardening informativo.
+6. **Expectativa inicial sobre controles secundários.** A primeira ideia foi tratar `Adicionar EPI`, `Adicionar outra atividade` e os ícones como funcionalidades disponíveis. A validação no DOM e no fluxo mostrou que alguns são apenas elementos visuais ou submetem o formulário; os achados foram registrados como defeitos somente quando havia uma affordance clara e uma falha observável.
 
 ## Validação manual
 

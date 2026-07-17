@@ -1,0 +1,12 @@
+Auditoria profunda de controles — 17/07/2026
+
+Adicionar EPI: clique sem novo bloco.
+Adicionar outra atividade: dispara POST 201 e fecha o formulário.
+ASO: nome do arquivo aparece, mas não está no JSON do POST.
+POST 500: formulário fecha e não exibe alerta.
+Três pontos: clique sem menu, item ou diálogo.
+Barra lateral: seis ícones sem semântica de controle ou navegação observável.
+Etapas superiores: nove textos repetidos ITEM 1 e imagens sem controle acessível.
+Lista vazia/erro/carregando: sem mensagem ou indicador dedicado.
+Lista com 15 itens: último cartão abaixo do contêiner com overflow-y hidden.
+Duplo clique: um POST e um registro — aprovado.

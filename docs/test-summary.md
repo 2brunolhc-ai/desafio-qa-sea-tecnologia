@@ -1,5 +1,7 @@
 # Resumo da execução
 
+> Este resumo preserva a linha de base do commit `dee2b10` (23 testes). Consulte [test-summary-deep-audit.md](test-summary-deep-audit.md) para a rodada complementar e [deep-audit-execution.md](deep-audit-execution.md) para a matriz ampliada.
+
 ## Execução final
 
 - Data: 17/07/2026.

@@ -9,7 +9,15 @@ export const EMPLOYEES_URL = `${API_BASE_URL}/employees`;
 
 export async function createEmployee(request, data) {
   const response = await request.post(EMPLOYEES_URL, { data });
-  const body = await response.json();
+  let body = null;
+
+  try {
+    body = await response.json();
+  } catch {
+    // Mantém a resposta disponível para validar status e headers mesmo se o
+    // servidor devolver um corpo vazio ou não JSON.
+  }
+
   return { response, body };
 }
 
@@ -21,7 +29,13 @@ export async function cleanupEmployee(request, record) {
   if (!record?.id) return;
 
   const employee = record.state?.employee || {};
-  const markers = [employee.name, employee.testMarker, employee.rg];
+  const markers = [
+    record.testMarker,
+    record.state?.testMarker,
+    employee.name,
+    employee.testMarker,
+    employee.rg,
+  ];
   const isOwned = markers.some(
     (value) => typeof value === 'string' && value.startsWith(TEST_DATA_PREFIX),
   );

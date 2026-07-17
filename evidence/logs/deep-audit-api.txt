@@ -1,0 +1,9 @@
+Auditoria profunda da API — 17/07/2026
+
+Validação ampliada: 14 payloads sintéticos (nome ausente/nulo/tipo incorreto/espaços/vazio/longo, datas futura e impossível, CPF alfanumérico/curto, gênero inválido, isActive textual, state ausente e employee nulo). Todos retornaram 201 e foram removidos pelo helper de limpeza.
+
+Métodos sem credencial em registros QA próprios: POST 201, PUT 200, DELETE 200 e GET por ID 200. Os testes esperavam 401/403 e permanecem vermelhos para evidenciar o risco.
+
+Cache: GET /employees retornou Cache-Control: public.
+
+Limpeza final verificada: 0 registros com prefixo QA Automacao.

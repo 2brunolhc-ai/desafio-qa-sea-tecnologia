@@ -24,7 +24,7 @@ Validar o cadastro e a consulta de trabalhadores, a consistência entre interfac
 - Compatibilidade completa: somente Chromium foi executado.
 - Acessibilidade completa: foi verificada apenas associação básica de rótulos.
 - Dispositivos físicos.
-- Upload de ASO: implicaria criar arquivo e não era prioridade frente aos riscos de dados e API.
+- Upload de ASO com arquivo sintético, apenas para verificar se a seleção chega à requisição; nenhum documento real foi usado.
 - Busca, paginação, ordenação, edição e exclusão web: controles não existem na interface observada.
 
 ## 4. Abordagem
@@ -65,7 +65,7 @@ Validar o cadastro e a consulta de trabalhadores, a consistência entre interfac
 
 ## 8. Matriz executada
 
-Execução final: 17/07/2026, 23 testes, 12 aprovados e 11 reprovados.
+Execução da suíte-base: 17/07/2026, 23 testes, 12 aprovados e 11 reprovados. A extensão de cobertura está documentada na seção 9 e nas notas de auditoria profunda.
 
 | ID | Área | Cenário | Tipo | Prioridade | Resultado | Automatizado | Evidência |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -92,3 +92,14 @@ Execução final: 17/07/2026, 23 testes, 12 aprovados e 11 reprovados.
 | WEB-008 | Acessibilidade | rótulos associados | acessibilidade básica | média | reprovado | sim | `BUG-006-rotulos-sem-associacao.txt` |
 | INT-001 | UI/API | API → interface com máscara | integração | alta | aprovado | sim | `ui-api-consistency.spec.js` |
 | INT-002 | UI/API | interface → API campo a campo | integração | alta | aprovado | sim | `ui-api-consistency.spec.js` |
+
+## 9. Extensão de cobertura — auditoria profunda
+
+| Área | Cenários adicionados | Resultado |
+| --- | --- | --- |
+| Controles de cadastro | EPI adicional, atividade adicional, ASO e POST 500 | BUG-008 a BUG-011 |
+| Navegação | três pontos, seis ícones laterais e nove etapas | BUG-012/013 e observação de etapas |
+| Estados da lista | vazio, carregando, erro 500 e 15 itens | BUG-014/015 |
+| API | 14 entradas inválidas, POST/PUT/DELETE/GET por ID e cache | BUG-001/002 e SEC-006 |
+
+Os testes dessa extensão estão em `tests/web/employee-advanced.spec.js`, `tests/api/employees-validation.spec.js` e `tests/api/employees-methods-and-cache.spec.js`.

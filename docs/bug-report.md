@@ -1,5 +1,7 @@
 # Relatório priorizado de defeitos
 
+> Este é o relatório da suíte-base publicada no commit `dee2b10`. A auditoria posterior, já versionada nesta entrega, está em [bug-report-deep-audit.md](bug-report-deep-audit.md) e não substitui os resultados históricos abaixo.
+
 ## BUG-001 — API permite leitura, alteração e exclusão sem autenticação
 
 **Status:** Confirmado  

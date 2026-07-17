@@ -107,6 +107,14 @@ desafio-qa-sea-tecnologia/
 └── playwright.config.js
 ```
 
+## Atualização — auditoria profunda
+
+Depois da suíte-base de 23 testes, foi executada uma rodada complementar com 12 testes web de controles/estados e 19 testes de API. Ela cobre ASO sintético, EPI/atividades adicionais, menus, etapas, lista vazia/carregando/erro, lista longa, métodos REST e cache. Os resultados e a distinção entre defeitos confirmados e observações estão em [auditoria profunda](docs/deep-audit-execution.md) e [relatório complementar](docs/bug-report-deep-audit.md).
+
+Os testes negativos permanecem vermelhos de propósito quando o produto aceita um comportamento inseguro ou inconsistente. A execução confirmou **0 registros `QA Automacao` remanescentes**.
+
+Na execução completa desta versão: **49 testes, 13 aprovados e 36 reprovados**. As reprovações são os defeitos reproduzidos e não falhas silenciosas do runner; veja `docs/test-summary-deep-audit.md`.
+
 ## Estratégia
 
 - Exploração antes da automação.
@@ -132,7 +140,7 @@ Não foram salvos tokens, cookies, credenciais ou respostas completas com valore
 - Somente Chromium.
 - Sem carga, stress, pentest invasivo, força bruta ou dispositivos físicos.
 - Sem requisitos formais de unicidade.
-- Upload de ASO e acessibilidade completa fora do recorte.
+- Acessibilidade completa, leitores de tela e dispositivos físicos continuam fora do recorte; o campo ASO foi exercitado com arquivo sintético.
 - A condição intermitente da lista após salvar ficou manual para evitar teste flakey.
 
 ## Documentação
@@ -146,6 +154,10 @@ Não foram salvos tokens, cookies, credenciais ou respostas completas com valore
 - [Resumo da execução](docs/test-summary.md)
 - [Diário de IA](docs/ai-usage-diary.md)
 - [Roteiro de apresentação](docs/presentation-guide.md)
+- [Auditoria profunda](docs/deep-audit-execution.md)
+- [Relatório complementar de defeitos](docs/bug-report-deep-audit.md)
+- [Resumo da auditoria profunda](docs/test-summary-deep-audit.md)
+- [Segurança e privacidade — complemento](docs/security-privacy-deep-audit.md)
 
 ## Próximo passo recomendado
 
