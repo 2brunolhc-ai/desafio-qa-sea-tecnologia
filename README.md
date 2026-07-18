@@ -27,7 +27,7 @@ npm ci
 npx playwright install chromium
 ```
 
-Os dois comandos foram executados com sucesso em 17/07/2026. O `npm ci` reportou zero vulnerabilidades nas dependências instaladas.
+Os dois comandos foram executados com sucesso em 17/07/2026 e revalidados em 18/07/2026. O `npm ci` reportou zero vulnerabilidades nas dependências instaladas.
 
 ## Configuração
 
@@ -109,6 +109,7 @@ desafio-qa-sea-tecnologia/
 │   ├── requests/
 │   ├── screenshots/
 │   └── videos/
+│       └── README.md
 ├── tests/
 │   ├── api/
 │   ├── fixtures/
@@ -131,7 +132,7 @@ Na execução histórica da versão ampliada: **49 testes, 13 aprovados e 36 rep
 
 ## Resultado atual — auditoria final
 
-Execução de 17/07/2026 às 21:38 (UTC−03:00):
+Execução de 18/07/2026 às 12:48 (UTC−03:00):
 
 | Métrica | Valor |
 | --- | ---: |
@@ -140,11 +141,13 @@ Execução de 17/07/2026 às 21:38 (UTC−03:00):
 | Reprovados por comportamento documentado | 36 |
 | Bloqueados | 0 |
 | Falhas técnicas/infraestrutura | 0 |
-| Duração Playwright | 2,9 min |
+| Duração Playwright | 2,8 min (170,4 s de processo) |
 | Registros `QA Automacao` remanescentes | 0 |
 | Bugs documentados | 15 (7 base + 8 complementares) |
 
 Os quatro testes direcionados confirmaram: GET por ID aprovado, UI → API aprovado, API → UI aprovado e rejeição de nome nulo reprovada porque o backend retornou 201. A suíte web complementar manteve 1 aprovado e 11 reprovações de produto.
+
+O registro sanitizado de comandos, códigos de saída, classificação e limpeza desta rodada está em [evidence/logs/final-gap-audit-2026-07-18.txt](evidence/logs/final-gap-audit-2026-07-18.txt).
 
 ## Estratégia
 
@@ -164,7 +167,7 @@ Os quatro testes direcionados confirmaram: GET por ID aprovado, UI → API aprov
 
 ## Evidências e privacidade
 
-As evidências HTTP foram reduzidas e mascaradas. Capturas finais mostram formulário vazio ou recortes sem registros preexistentes. Relatórios e resultados brutos do Playwright ficam no `.gitignore` porque screenshots automáticos de falha podem capturar dados já existentes na lista.
+As evidências HTTP foram reduzidas e mascaradas. Capturas finais mostram formulário vazio ou recortes sem registros preexistentes. Relatórios e resultados brutos do Playwright ficam no `.gitignore` porque screenshots automáticos de falha podem capturar dados já existentes na lista. Nenhum vídeo foi publicado: `evidence/videos/README.md` registra essa decisão e mantém o diretório auditável no Git.
 
 Não foram salvos tokens, cookies, credenciais ou respostas completas com valores pessoais. Nenhum registro alheio foi alterado ou excluído.
 

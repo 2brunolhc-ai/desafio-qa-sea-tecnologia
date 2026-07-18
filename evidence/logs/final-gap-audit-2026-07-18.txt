@@ -1,0 +1,24 @@
+Auditoria final de lacunas — 18/07/2026 12:48 UTC-03:00
+
+Repositório: origin/main estava alinhada ao SHA 72e6ce63dc6a17933ded1d7a2e2001742af671c0 antes das correções desta rodada.
+Instalação limpa: npm ci — código 0, 3 pacotes adicionados, 0 vulnerabilidades.
+Chromium: npx playwright install chromium — código 0.
+Sintaxe: 13 arquivos em tests e playwright.config.js (14 no total) — código 0.
+Descoberta: 49 testes em 10 specs — código 0.
+
+Execuções direcionadas:
+- GET por ID: 1 aprovado — código 0.
+- Nome nulo: 1 reprovado porque o backend retornou 201 em vez de 400/422 — código 1 esperado.
+- UI para API: 1 aprovado — código 0.
+- API para UI: 1 aprovado — código 0.
+- Web complementar: 1 aprovado e 11 reprovados por comportamento documentado, 1,5 min — código 1 esperado.
+- Smoke de apresentação: 5 aprovados em 5,9 s — código 0.
+
+Suíte completa: 49 executados; 13 aprovados; 36 reprovados; 0 bloqueados; 2,8 min (170,4 s de processo); código 1 esperado.
+Classificação: 21 reprovações de API e 15 de interface associadas aos defeitos documentados; 0 falhas técnicas, de infraestrutura ou de seletor novo.
+Limpeza filtrada: 0 registros com prefixo QA Automacao.
+Artefatos brutos: test-results/ e playwright-report/ removidos após a análise; ambos permanecem no .gitignore.
+Relatórios: 15 bugs em sequência, todos com campos obrigatórios, spec relacionado e evidência existente.
+Integridade: links internos válidos, nenhuma evidência duplicada e nenhum artefato proibido rastreado.
+
+Este resumo não contém corpo da API, IDs, cookies, tokens ou dados pessoais.

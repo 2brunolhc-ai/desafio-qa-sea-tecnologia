@@ -14,18 +14,18 @@ O arquivo `employees-validation.spec.js` tem 14 testes no total, dos quais cinco
 
 ### Auditoria final atual
 
-- Data/hora registrada: **17/07/2026 21:38 (UTC−03:00)**.
+- Data/hora registrada: **18/07/2026 12:48 (UTC−03:00)**.
 - Comando: `npm test -- --reporter=line`.
 - Descobertos/executados: **49/49**.
 - Aprovados: **13**.
 - Reprovados: **36** — 21 expectativas de API e 15 de interface, todas associadas aos comportamentos documentados.
 - Bloqueados: **0**.
 - Falhas técnicas, de infraestrutura ou de seletor novo: **0**.
-- Duração Playwright: **2,9 min** (174,6 s de processo).
+- Duração Playwright: **2,8 min** (170,4 s de processo).
 - Código de saída: **1**, esperado enquanto os defeitos permanecerem.
 - Registros `QA Automacao` remanescentes: **0**, verificados por consulta filtrada sem imprimir a coleção.
 
-O ambiente não mudou de forma relevante em relação ao histórico: 13/36 permaneceu confirmado. Testes direcionados adicionais passaram para GET por ID, UI → API e API → UI; “rejeita nome nulo” falhou porque recebeu 201, confirmando defeito de produto e não erro do runner.
+O ambiente não mudou de forma relevante em relação ao histórico nem à auditoria de 17/07: 13/36 permaneceu confirmado. Testes direcionados adicionais passaram para GET por ID, UI → API e API → UI; “rejeita nome nulo” falhou porque recebeu 201, confirmando defeito de produto e não erro do runner.
 
 ## Aprovado relevante
 

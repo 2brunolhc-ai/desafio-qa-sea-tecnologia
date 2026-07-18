@@ -1,4 +1,4 @@
-# Notas exploratórias
+# Notas exploratórias — sessão-base
 
 ## Sessão
 
@@ -7,7 +7,7 @@
 - Sistema operacional: Windows.
 - Navegadores: Chromium no navegador integrado (reconhecimento) e Chromium 140 via Playwright 1.55.1 (confirmação automatizada).
 - Resoluções: 1280 × 720 no reconhecimento, 1440 × 900 na evidência desktop e 390 × 844 na verificação responsiva.
-- Estado inicial do repositório: não havia projeto Node.js existente.
+- Estado no início da sessão-base: o repositório ainda não continha o projeto Node.js/Playwright; a estrutura executável foi adicionada durante a entrega.
 - Dados: somente registros com prefixo `QA Automacao`; todos os registros descartáveis foram removidos.
 
 ## Convenções
@@ -113,5 +113,5 @@
 - Sem documentação funcional ou credenciais para perfis diferentes.
 - Nenhum teste de carga, estresse, força bruta ou pentest invasivo.
 - Nenhum registro de terceiros foi alterado ou excluído.
-- Upload de arquivo, dispositivos físicos, compatibilidade completa e acessibilidade completa ficaram fora do recorte prioritário.
+- Na sessão-base, upload de arquivo, dispositivos físicos, compatibilidade completa e acessibilidade completa ficaram fora do recorte prioritário. A auditoria complementar depois cobriu a seleção de ASO com fixture sintética e a semântica básica de navegação; documento real, validações de tipo/tamanho/antivírus, leitores de tela e dispositivos físicos continuam fora.
 - Query strings da API não foram exploradas porque não são usadas pela interface e não havia contrato documentado.
