@@ -1,164 +1,87 @@
-# Relatório priorizado de defeitos
+# Relatório priorizado de defeitos — suíte-base
 
-> Este é o relatório da suíte-base publicada no commit `dee2b10`. A auditoria posterior, já versionada nesta entrega, está em [bug-report-deep-audit.md](bug-report-deep-audit.md) e não substitui os resultados históricos abaixo.
+Este relatório preserva BUG-001 a BUG-007 da base de 23 testes publicada no commit `dee2b10`. BUG-008 a BUG-015 estão em [bug-report-deep-audit.md](bug-report-deep-audit.md). Ambiente: aplicação e API da SEA Tecnologia, Windows, Chromium/Playwright, 17/07/2026. Evidências HTTP foram reduzidas; nenhuma resposta completa ou dado de terceiro foi salvo.
 
-## BUG-001 — API permite leitura, alteração e exclusão sem autenticação
+## BUG-001 — API permite leitura e mutações sem autenticação
 
-**Status:** Confirmado  
-**Área:** Segurança e privacidade  
-**Severidade:** Alta  
-**Prioridade:** Alta  
-**Ambiente:** `https://analista-teste.seatecnologia.com.br`, Chromium/Playwright, Windows, 17/07/2026
+- **Severidade/Prioridade:** alta / alta. **Status:** confirmado.
+- **Contexto:** `/employees` contém campos pessoais e ocupacionais e não oferece tela de login.
+- **Pré-condição:** nenhuma credencial; para PATCH/DELETE, registro `QA Automacao` criado pelo próprio teste.
+- **Passos:** (1) GET `/employees` sem Authorization/cookie; (2) criar registro sintético; (3) PATCH no ID retornado; (4) DELETE no mesmo ID.
+- **Atual:** GET 200, PATCH 200 e DELETE 200 sem autenticação. **Esperado:** 401/403 e autorização compatível com perfil/finalidade.
+- **Impacto:** exposição, adulteração ou perda de dados. **Justificativa:** alta pelo efeito direto em confidencialidade e integridade; não foi marcada crítica porque não houve alteração de terceiros nem comprometimento administrativo.
+- **Evidência:** `evidence/requests/BUG-001-api-sem-autenticacao.http`.
+- **Teste:** `tests/api/employees-security.spec.js` — “GET de dados de trabalhadores exige autenticação” e “PATCH de registro exige autenticação ou autorização”; DELETE também está em `tests/api/employees-methods-and-cache.spec.js`.
+- **Recomendação:** autenticação obrigatória, autorização por função/escopo, minimização de campos e trilha de auditoria.
 
-**Pré-condições:** Nenhuma credencial configurada. Para escrita e exclusão, usar registro `QA Automacao` criado pelo próprio teste.
+## BUG-002 — Backend aceita dados obrigatórios inválidos
 
-**Passos para reproduzir:**
+- **Severidade/Prioridade:** alta / alta. **Status:** confirmado.
+- **Contexto:** a UI aplica restrições HTML, mas o backend é a fronteira de integridade.
+- **Pré-condição:** payloads com marcadores sintéticos e cleanup pelo ID devolvido.
+- **Passos:** enviar POST sem nome, com nome nulo, numérico ou só espaços e com nascimento futuro.
+- **Atual:** os cinco retornam 201 e criam registros. **Esperado:** 400 ou 422, sem criação, com erro de campo.
+- **Impacto:** dados incompletos/impossíveis podem alimentar processos de segurança do trabalho. **Justificativa:** alta pela persistência sistemática de dados inválidos no fluxo central.
+- **Evidência:** `evidence/requests/BUG-002-validacao-backend.json`.
+- **Teste:** `tests/api/employees-validation.spec.js` — cinco cenários-base “rejeita ...”.
+- **Recomendação:** schema server-side com tipos, obrigatoriedade, trim, calendário/domínios e mensagens 400/422.
 
-1. Enviar GET para `/employees` sem token ou cookie.
-2. Criar um registro fictício com POST.
-3. Enviar PATCH para o ID retornado, ainda sem credencial.
-4. Enviar DELETE para o mesmo ID.
+## BUG-003 — “Próximo passo” não executa ação observável
 
-**Resultado atual:** GET retorna 200; PATCH retorna 200; DELETE retorna 200.  
-**Resultado esperado:** leitura e operações mutáveis sobre dados de trabalhadores devem exigir autenticação e autorização compatíveis com a finalidade.  
-**Impacto:** risco de exposição, adulteração e perda de dados pessoais e ocupacionais.  
-**Frequência:** Sempre nas execuções realizadas.  
-**Evidência:** `evidence/requests/BUG-001-api-sem-autenticacao.http`; `tests/api/employees-security.spec.js`.  
-**Observações:** nenhum registro preexistente foi alterado ou excluído; valores preexistentes foram ocultados.
+- **Severidade/Prioridade:** média / alta. **Status:** confirmado.
+- **Contexto:** a listagem apresenta conclusão de etapa e CTA de avanço.
+- **Pré-condição:** listagem carregada.
+- **Passos:** marcar “A etapa está concluída?” como Sim e clicar em “Próximo passo”.
+- **Atual:** URL, título e conteúdo permanecem; “Funcionário(s)” continua visível. **Esperado:** avançar ou informar bloqueio/fim do fluxo.
+- **Impacto:** impede continuidade e gera dúvida operacional. **Justificativa:** média porque bloqueia navegação, mas não causa perda de dados.
+- **Evidência:** `evidence/logs/BUG-003-proximo-passo.txt` e `evidence/screenshots/BUG-003-botao-proximo-passo.png`.
+- **Teste:** `tests/web/employee-list.spec.js` — “Próximo passo avança depois que a etapa é concluída”.
+- **Recomendação:** implementar destino/estado e feedback; remover o CTA enquanto não houver ação.
 
-## BUG-002 — Backend aceita trabalhadores com dados obrigatórios inválidos
+## BUG-004 — Formulário é recortado em 390 px
 
-**Status:** Confirmado  
-**Área:** API e integridade de dados  
-**Severidade:** Alta  
-**Prioridade:** Alta  
-**Ambiente:** endpoint `/employees`, Playwright APIRequestContext, Windows, 17/07/2026
+- **Severidade/Prioridade:** média / alta. **Status:** confirmado.
+- **Contexto:** formulário aberto em viewport 390 × 844.
+- **Pré-condição:** abrir “+ Adicionar Funcionário”.
+- **Passos:** definir 390 × 844 e medir o input Nome.
+- **Atual:** o campo termina em `x=466`, 76 px além da viewport. **Esperado:** controles integralmente visíveis/reorganizados.
+- **Impacto:** preenchimento difícil ou inviável em tela estreita. **Justificativa:** média por afetar usabilidade de uma classe de dispositivos sem corromper dados diretamente.
+- **Evidência:** `evidence/screenshots/BUG-004-formulario-mobile-recortado.png`.
+- **Teste:** `tests/web/employee-list.spec.js` — “formulário permanece integralmente visível em 390 px”.
+- **Recomendação:** layout responsivo em coluna, larguras fluidas e teste de breakpoints/dispositivos físicos.
 
-**Pré-condições:** Nenhuma autenticação; payloads contêm somente marcadores fictícios.
+## BUG-005 — Defaults visíveis dos seletores não são persistidos
 
-**Passos para reproduzir:**
+- **Severidade/Prioridade:** média / alta. **Status:** confirmado.
+- **Contexto:** Cargo, Atividade e EPI exibem valores iniciais como se estivessem selecionados.
+- **Pré-condição:** formulário novo; não interagir com os três seletores.
+- **Passos:** preencher obrigatórios, salvar e inspecionar o POST criado pelo teste.
+- **Atual:** UI mostra `Cargo 01`, `Ativid 01` e `Capacete de segurança`; API recebe `role: ""` e omite `activity`/`epi`. **Esperado:** persistir o exibido ou mostrar placeholder obrigatório.
+- **Impacto:** cadastro aparenta completo, mas perde dados ocupacionais. **Justificativa:** média pelo risco de inconsistência silenciosa sem indisponibilidade geral.
+- **Evidência:** `evidence/logs/BUG-005-defaults-nao-persistidos.txt`.
+- **Teste:** `tests/web/employee-registration.spec.js` — “valores padrão visíveis dos seletores são persistidos sem interação”.
+- **Recomendação:** inicializar estado e componentes com a mesma fonte ou exigir seleção explícita.
 
-1. Enviar POST sem `name`.
-2. Repetir com `name: null`, `name` numérico e `name` contendo só espaços.
-3. Enviar um payload completo com `birthDay: "2099-01-01"`.
+## BUG-006 — Rótulos não identificam campos de texto
 
-**Resultado atual:** todos os cinco POSTs retornam 201 e criam registros.  
-**Resultado esperado:** retornar 400/422, sem criar registro, com mensagem que identifique o campo inválido.  
-**Impacto:** dados incompletos ou impossíveis podem ser usados em processos de segurança do trabalho.  
-**Frequência:** 5 de 5 cenários.  
-**Evidência:** `evidence/requests/BUG-002-validacao-backend.json`; `tests/api/employees-validation.spec.js`.  
-**Observações:** todos os IDs criados foram removidos em `finally`.
+- **Severidade/Prioridade:** baixa / média. **Status:** confirmado.
+- **Contexto:** associação acessível básica de Nome, CPF, Data de nascimento e RG.
+- **Pré-condição:** formulário aberto.
+- **Passos:** consultar por `getByLabel` e comparar `label[for]` com `input[id]`.
+- **Atual:** cada consulta retorna zero. **Esperado:** cada rótulo identificar exatamente um controle.
+- **Impacto:** leitores de tela, foco por rótulo e automação semântica perdem contexto. **Justificativa:** baixa no recorte porque não bloqueia usuários de mouse/teclado visual, embora exija correção de acessibilidade.
+- **Evidência:** `evidence/logs/BUG-006-rotulos-sem-associacao.txt`.
+- **Teste:** `tests/web/employee-validation.spec.js` — “rótulos identificam programaticamente seus campos”.
+- **Recomendação:** IDs estáveis, `htmlFor` correto e auditoria de acessibilidade completa.
 
-## BUG-003 — “Próximo passo” não executa nenhuma ação
+## BUG-007 — Registro salvo pode exigir reload para aparecer
 
-**Status:** Confirmado  
-**Área:** Interface e navegação  
-**Severidade:** Média  
-**Prioridade:** Alta  
-**Ambiente:** página `/`, Chromium 140, Windows, 17/07/2026
-
-**Pré-condições:** Listagem carregada.
-
-**Passos para reproduzir:**
-
-1. Marcar `A etapa está concluída?` como Sim.
-2. Clicar em `Próximo passo`.
-
-**Resultado atual:** URL, título e conteúdo continuam iguais; `Funcionário(s)` permanece visível.  
-**Resultado esperado:** avançar para a próxima etapa ou informar claramente que não há próxima etapa/que existe bloqueio.  
-**Impacto:** usuário não consegue continuar o fluxo sugerido pela interface.  
-**Frequência:** Sempre.  
-**Evidência:** `evidence/logs/BUG-003-proximo-passo.txt`, `evidence/screenshots/BUG-003-botao-proximo-passo.png`; `tests/web/employee-list.spec.js`.  
-**Observações:** o destino exato não foi inventado; a asserção exige apenas uma mudança observável.
-
-## BUG-004 — Formulário fica recortado em viewport de 390 px
-
-**Status:** Confirmado  
-**Área:** Interface responsiva  
-**Severidade:** Média  
-**Prioridade:** Alta  
-**Ambiente:** Chromium 140, viewport 390 × 844, Windows, 17/07/2026
-
-**Pré-condições:** Abrir `+ Adicionar Funcionário`.
-
-**Passos para reproduzir:**
-
-1. Definir viewport 390 × 844.
-2. Abrir o formulário.
-3. Observar os campos e medir o retângulo do input Nome.
-
-**Resultado atual:** o input termina em `x=466`, 76 px além da viewport; colunas e textos ficam recortados.  
-**Resultado esperado:** controles integralmente visíveis, reorganizados em uma coluna ou com largura compatível.  
-**Impacto:** preenchimento fica difícil ou impossível em tela estreita.  
-**Frequência:** Sempre em 390 px.  
-**Evidência:** `evidence/screenshots/BUG-004-formulario-mobile-recortado.png`; `tests/web/employee-list.spec.js`.  
-**Observações:** não foram testados dispositivos físicos.
-
-## BUG-005 — Valores iniciais visíveis dos seletores não são persistidos
-
-**Status:** Confirmado  
-**Área:** Interface e integração  
-**Severidade:** Média  
-**Prioridade:** Alta  
-**Ambiente:** formulário web e POST `/employees`, Chromium 140, 17/07/2026
-
-**Pré-condições:** Formulário recém-aberto.
-
-**Passos para reproduzir:**
-
-1. Preencher os campos obrigatórios.
-2. Não interagir com Cargo, Atividade ou EPI, que exibem valores iniciais.
-3. Salvar e ler a resposta POST.
-
-**Resultado atual:** a tela exibe `Cargo 01`, `Ativid 01` e `Capacete de segurança`; a API recebe `role: ""` e não recebe `activity`/`epi`.  
-**Resultado esperado:** valores exibidos como selecionados devem compor o payload, ou a interface deve exibir um placeholder e exigir seleção.  
-**Impacto:** cadastro aparenta estar completo, mas perde informações ocupacionais.  
-**Frequência:** Sempre no cenário sem interação.  
-**Evidência:** `evidence/logs/BUG-005-defaults-nao-persistidos.txt`; `tests/web/employee-registration.spec.js`.  
-**Observações:** quando os três seletores são acionados explicitamente, o teste UI → API passa.
-
-## BUG-007 — Registro salvo pode não aparecer até recarregar a lista
-
-**Status:** Confirmado  
-**Área:** Interface e integração  
-**Severidade:** Média  
-**Prioridade:** Média  
-**Ambiente:** formulário e listagem web, Chromium, Windows, 17/07/2026
-
-**Pré-condições:** Dados fictícios válidos.
-
-**Passos para reproduzir:**
-
-1. Salvar um novo trabalhador.
-2. Confirmar pela API que o POST criou o registro.
-3. Procurar o nome na lista sem recarregar.
-4. Recarregar a página.
-
-**Resultado atual:** em uma execução, o registro não apareceu imediatamente, mas apareceu após reload.  
-**Resultado esperado:** atualizar a lista depois que o POST terminar ou exibir confirmação com estado consistente.  
-**Impacto:** usuário pode acreditar que o cadastro falhou e tentar criar duplicado.  
-**Frequência:** Intermitente, 1 em 2 cadastros manuais.  
-**Evidência:** `evidence/logs/BUG-007-listagem-desatualizada.txt`.  
-**Observações:** mantido manual para evitar teste automatizado deliberadamente flakey.
-
-## BUG-006 — Rótulos não estão associados aos campos de texto
-
-**Status:** Confirmado  
-**Área:** Interface e acessibilidade básica  
-**Severidade:** Baixa  
-**Prioridade:** Média  
-**Ambiente:** formulário web, Chromium 140, Windows, 17/07/2026
-
-**Pré-condições:** Formulário aberto.
-
-**Passos para reproduzir:**
-
-1. Consultar os campos por `getByLabel('Nome')`, CPF, Data de nascimento e RG.
-2. Inspecionar `for` dos labels e `id` dos inputs.
-
-**Resultado atual:** cada consulta retorna zero; os inputs não possuem IDs compatíveis com os labels.  
-**Resultado esperado:** cada label deve identificar exatamente um controle.  
-**Impacto:** leitores de tela e automação semântica perdem contexto; clicar no texto do rótulo não oferece associação confiável.  
-**Frequência:** Sempre.  
-**Evidência:** `evidence/logs/BUG-006-rotulos-sem-associacao.txt`; `tests/web/employee-validation.spec.js`.  
-**Observações:** acessibilidade completa ficou fora do escopo.
+- **Severidade/Prioridade:** média / média. **Status:** confirmado intermitente.
+- **Contexto:** consistência da listagem depois do POST do cadastro.
+- **Pré-condição:** dados sintéticos válidos.
+- **Passos:** salvar, confirmar POST, procurar sem reload e então recarregar.
+- **Atual:** em 1 de 2 execuções manuais o item só apareceu após reload. **Esperado:** atualizar a lista ou confirmar estado pendente/erro.
+- **Impacto:** pode induzir criação duplicada. **Justificativa:** média pelo impacto operacional, reduzida pela frequência intermitente e recuperação com reload.
+- **Evidência:** `evidence/logs/BUG-007-listagem-desatualizada.txt`.
+- **Teste:** não automatizado deliberadamente; a baixa amostra e a condição intermitente tornariam uma asserção binária flakey. O fluxo estável com reload fica em `tests/web/employee-registration.spec.js`.
+- **Recomendação:** aguardar o POST, atualizar cache/estado da lista e exibir sucesso/erro explícito; medir em ambiente isolado.

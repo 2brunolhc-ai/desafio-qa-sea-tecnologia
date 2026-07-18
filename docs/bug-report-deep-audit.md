@@ -1,73 +1,95 @@
-# Relatório complementar — auditoria profunda
+# Relatório complementar — BUG-008 a BUG-015
 
-Este documento complementa o relatório principal com a rodada de 17/07/2026 que cobriu os controles visuais, estados de rede e caminhos de erro que não estavam na primeira suíte. Os testes usam somente dados sintéticos próprios ou respostas mockadas no navegador.
+Complemento da auditoria de 17/07/2026. Os cenários usam somente registros `QA Automacao`, fixture ASO sintética ou respostas interceptadas no navegador. Mocks de lista exercitam a UI e não são evidência de respostas reais do backend.
 
-## BUG-008 — “Adicionar outra atividade” submete o formulário
+## BUG-008 — “Adicionar outra atividade” submete o cadastro
 
-- **Severidade/Prioridade:** média / alta.
-- **Reprodução:** abrir o cadastro, preencher os campos obrigatórios e clicar em `Adicionar outra atividade`.
-- **Atual:** um POST 201 é disparado e o formulário fecha; o controle não adiciona um segundo bloco.
-- **Esperado:** adicionar outra atividade sem salvar o cadastro, mantendo os dados digitados.
-- **Evidência:** `tests/web/employee-advanced.spec.js`, teste “Adicionar outra atividade...”.
+- **Severidade/Prioridade:** média / alta. **Status:** confirmado.
+- **Contexto/Pré-condição:** formulário preenchido com dados sintéticos e primeira atividade visível.
+- **Passos:** clicar em “Adicionar outra atividade” antes de Salvar e observar rede/DOM.
+- **Atual:** dispara POST 201 e fecha o formulário. **Esperado:** acrescentar segundo bloco sem submissão.
+- **Impacto/Justificativa:** cadastro é salvo prematuramente e pode ficar incompleto; média porque afeta o fluxo, mas o registro é recuperável.
+- **Evidência:** `evidence/logs/deep-audit-controls.txt`.
+- **Teste:** `tests/web/employee-advanced.spec.js` — “Adicionar outra atividade não envia nem fecha o cadastro atual”.
+- **Recomendação:** definir `type="button"`, separar handlers e testar ausência de POST.
 
-## BUG-009 — “Adicionar EPI” não adiciona um novo bloco
+## BUG-009 — “Adicionar EPI” não cria novo conjunto
 
-- **Severidade/Prioridade:** média / média.
-- **Reprodução:** abrir o cadastro e clicar em `Adicionar EPI`.
-- **Atual:** o texto aparenta uma ação, mas a quantidade de seletores e campos de CA não muda.
-- **Esperado:** criar um segundo conjunto de EPI e número de CA, ou remover a affordance.
-- **Evidência:** `tests/web/employee-advanced.spec.js`, teste “Adicionar EPI...”.
+- **Severidade/Prioridade:** média / média. **Status:** confirmado.
+- **Contexto/Pré-condição:** formulário aberto com bloco de EPI visível.
+- **Passos:** contar seletores/CA, clicar “Adicionar EPI” e contar novamente.
+- **Atual:** nenhuma quantidade muda. **Esperado:** segundo conjunto EPI + CA ou ausência da affordance.
+- **Impacto/Justificativa:** impede registrar múltiplos EPIs; média por perda funcional sem perda automática de dados.
+- **Evidência:** `evidence/logs/deep-audit-controls.txt`.
+- **Teste:** `tests/web/employee-advanced.spec.js` — “Adicionar EPI cria um novo conjunto de EPI e CA”.
+- **Recomendação:** implementar coleção dinâmica com chaves estáveis e validação por item.
 
-## BUG-010 — arquivo de ASO selecionado não é enviado
+## BUG-010 — ASO selecionado não é enviado
 
-- **Severidade/Prioridade:** média / alta.
-- **Reprodução:** abrir o cadastro, selecionar `tests/fixtures/aso-ficticio.txt`, preencher e salvar; inspecionar o `postData`.
-- **Atual:** o nome aparece na tela, mas o JSON POST não contém arquivo, nome ou campo ASO.
-- **Esperado:** enviar o arquivo em multipart/endpoint próprio, ou informar que o campo ainda não está implementado.
-- **Evidência:** `evidence/screenshots/BUG-010-aso-selecionado-nao-enviado.png`; teste correspondente.
+- **Severidade/Prioridade:** média / alta. **Status:** confirmado.
+- **Contexto/Pré-condição:** fixture `tests/fixtures/aso-ficticio.txt`, sem documento real.
+- **Passos:** selecionar a fixture, preencher, salvar e inspecionar Content-Type/corpo do POST.
+- **Atual:** nome aparece na tela, mas a requisição não contém arquivo, nome nem campo ASO. **Esperado:** multipart/endpoint próprio ou aviso de indisponibilidade.
+- **Impacto/Justificativa:** usuário acredita ter anexado documento ocupacional que não é persistido; média por perda silenciosa limitada ao anexo.
+- **Evidência:** `evidence/screenshots/BUG-010-aso-selecionado-nao-enviado.png` e `evidence/logs/deep-audit-controls.txt`.
+- **Teste:** `tests/web/employee-advanced.spec.js` — “ASO selecionado é incluído na requisição de cadastro”.
+- **Recomendação:** implementar upload seguro, validação de tipo/tamanho, antivírus e confirmação; nunca logar conteúdo sensível.
 
-## BUG-011 — falha 500 fecha o cadastro e não informa erro
+## BUG-011 — POST 500 fecha o formulário sem feedback
 
-- **Severidade/Prioridade:** alta / alta.
-- **Reprodução:** simular POST 500, preencher o cadastro e clicar em `Salvar`.
-- **Atual:** o formulário é fechado antes do tratamento da resposta; não há alerta nem preservação dos valores.
-- **Esperado:** manter o formulário, preservar os dados e exibir mensagem acionável.
-- **Evidência:** `tests/web/employee-advanced.spec.js`, teste de erro 500.
+- **Severidade/Prioridade:** alta / alta. **Status:** confirmado com resposta controlada.
+- **Contexto/Pré-condição:** `page.route` responde 500 somente ao POST sintético.
+- **Passos:** preencher e salvar sob o mock 500.
+- **Atual:** formulário fecha, valores somem e não há alerta. **Esperado:** manter dados e mostrar erro acionável/retry.
+- **Impacto/Justificativa:** perda de trabalho e risco de tentativa duplicada; alta por falha no caminho de persistência sem recuperação visível.
+- **Evidência:** `evidence/logs/deep-audit-controls.txt`.
+- **Teste:** `tests/web/employee-advanced.spec.js` — “erro 500 ao salvar mantém os dados e informa a falha”.
+- **Recomendação:** fechar somente após sucesso, preservar estado e tratar erros/timeout de forma acessível.
 
-## BUG-012 — menu de três pontos do cartão não oferece ações
+## BUG-012 — Menu de três pontos não oferece ações
 
-- **Severidade/Prioridade:** média / média.
-- **Reprodução:** carregar um funcionário próprio e clicar no ícone `...` do cartão.
-- **Atual:** URL, DOM de menus, diálogos e itens de menu permanecem inalterados.
-- **Esperado:** abrir ações implementadas (detalhar, editar ou excluir) ou não apresentar o ícone como affordance.
-- **Evidência:** `evidence/screenshots/BUG-012-menu-tres-pontos-sem-acao.png`; teste correspondente.
+- **Severidade/Prioridade:** média / média. **Status:** confirmado com registro mockado próprio.
+- **Contexto/Pré-condição:** cartão sintético visível, sem leitura de trabalhador preexistente.
+- **Passos:** clicar no ícone `...` e procurar menu/itens.
+- **Atual:** não há alteração observável. **Esperado:** ações implementadas ou remoção do ícone interativo.
+- **Impacto/Justificativa:** affordance enganosa bloqueia detalhar/editar/excluir pela UI; média pelo escopo localizado.
+- **Evidência:** `evidence/screenshots/BUG-012-menu-tres-pontos-sem-acao.png`.
+- **Teste:** `tests/web/employee-advanced.spec.js` — “menu de três pontos oferece ações para o funcionário”.
+- **Recomendação:** implementar menu acessível com ações autorizadas ou substituir por elemento não interativo.
 
-## BUG-013 — navegação lateral sem semântica ou ação observável
+## BUG-013 — Navegação lateral e etapas sem semântica adequada
 
-- **Severidade/Prioridade:** média / média.
-- **Reprodução:** inspecionar e clicar os seis ícones laterais.
-- **Atual:** pais são `div`, sem `role`, `tabindex` ou nome acessível; clicar não muda rota, conteúdo ou estado.
-- **Esperado:** controles focáveis, nomeados e com destino definido.
-- **Evidência:** `evidence/screenshots/BUG-013-menus-laterais-sem-acao.png`; teste correspondente.
+- **Severidade/Prioridade:** média / média. **Status:** confirmado.
+- **Contexto/Pré-condição:** listagem com GET mockado como vazio para não expor terceiros.
+- **Passos:** inspecionar seis ícones laterais e nove etapas quanto a papel, foco e nome.
+- **Atual:** pais são `div`, sem papel/tabindex/nome; etapas repetem `ITEM 1`. **Esperado:** links/botões focáveis, nomeados e etapas distintas.
+- **Impacto/Justificativa:** navegação por teclado/leitor de tela e compreensão do processo ficam prejudicadas; média por afetar acesso a áreas inteiras.
+- **Evidência:** `evidence/logs/deep-audit-controls.txt`; a captura de lista vazia usada em BUG-014 também mostra os seis ícones sem dados de trabalhadores.
+- **Teste:** `tests/web/employee-advanced.spec.js` — “menus laterais são focáveis...” e “etapas superiores têm nomes distintos...”.
+- **Recomendação:** usar elementos semânticos, nomes acessíveis, foco visível e rótulos de etapa reais.
 
-## BUG-014 — lista vazia, carregando e erro sem feedback
+## BUG-014 — Estados vazio, carregando e erro não têm feedback
 
-- **Severidade/Prioridade:** média / alta.
-- **Reprodução:** mockar GET `/employees` como `[]`, atrasado ou 500.
-- **Atual:** o resumo mostra `Ativos 0/0` ou `Ativos /`; não há mensagem de lista vazia, indicador de progresso nem alerta de erro.
-- **Esperado:** comunicar o estado e oferecer orientação/recuperação.
-- **Evidência:** `evidence/screenshots/BUG-014-lista-vazia-sem-feedback.png`, `BUG-014-lista-erro-sem-feedback.png`; testes correspondentes.
+- **Severidade/Prioridade:** média / alta. **Status:** confirmado na UI com mocks.
+- **Contexto/Pré-condição:** GET interceptado como `[]`, atraso de 2 s ou 500; a API real não é alterada.
+- **Passos:** abrir a lista em cada resposta controlada.
+- **Atual:** mostra `Ativos 0/0` ou `Ativos /`, sem estado vazio, progresso ou alerta. **Esperado:** mensagens distintas, status acessível e recuperação.
+- **Impacto/Justificativa:** usuário não diferencia ausência de dados, espera e falha; média por ambiguidade operacional sem corrupção direta.
+- **Evidência:** `evidence/screenshots/BUG-014-lista-vazia-sem-feedback.png`, `evidence/screenshots/BUG-014-lista-erro-sem-feedback.png` e `evidence/logs/deep-audit-controls.txt`.
+- **Teste:** `tests/web/employee-advanced.spec.js` — três testes “lista vazia...”, “carregamento...” e “falha ao carregar...”.
+- **Recomendação:** estados explícitos com `role=status/alert`, retry e telemetria sanitizada.
 
-## BUG-015 — lista longa é recortada sem rolagem interna
+## BUG-015 — Lista longa é recortada sem rolagem
 
-- **Severidade/Prioridade:** média / alta.
-- **Reprodução:** carregar 15 registros sintéticos.
-- **Atual:** o último cartão fica abaixo do contêiner; `overflow-y` é `hidden` e não existe rolagem interna.
-- **Esperado:** contêiner com `overflow-y: auto/scroll`, paginação ou altura que cresça até permitir alcançar todos os registros.
-- **Evidência:** `evidence/screenshots/BUG-015-lista-recortada-sem-scroll.png`; teste correspondente.
+- **Severidade/Prioridade:** média / alta. **Status:** confirmado com 15 objetos mockados.
+- **Contexto/Pré-condição:** lista sintética em memória; não é teste de carga.
+- **Passos:** responder GET com 15 itens, localizar o último e medir contêiner/overflow.
+- **Atual:** último cartão fica abaixo do contêiner e `overflow-y` não permite alcançá-lo. **Esperado:** rolagem, paginação ou altura adequada.
+- **Impacto/Justificativa:** itens válidos tornam-se inacessíveis; média porque afeta completude da consulta, sem mutar dados.
+- **Evidência:** `evidence/screenshots/BUG-015-lista-recortada-sem-scroll.png`.
+- **Teste:** `tests/web/employee-advanced.spec.js` — “lista longa permite alcançar o último funcionário”.
+- **Recomendação:** `overflow-y: auto`, paginação/virtualização e testes de teclado/responsividade.
 
-## Observações adicionais
+## Resultado positivo complementar
 
-- Os nove marcadores superiores repetem `ITEM 1` e não expõem controles acessíveis. O teste registra isso como falha de semântica/navegação, mas o destino de negócio não foi inventado.
-- O duplo clique em `Salvar` gerou um único POST e um único registro; esse cenário permanece aprovado.
-- A seleção de sexo feminino e o caminho de trabalhador sem EPI foram exercitados no levantamento exploratório; não houve alteração de registro de terceiros.
+O teste `tests/web/employee-advanced.spec.js` — “duplo clique em Salvar cria apenas um registro” — produziu historicamente um único POST. A janela de observação de 1 segundo é deliberada e está registrada como limitação, não como prova absoluta contra qualquer atraso arbitrário.

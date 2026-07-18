@@ -34,7 +34,14 @@ Cadastro e `/employees` foram priorizados porque concentram entrada, armazenamen
 - Comportamento intermitente da lista após salvar, para não introduzir teste flakey.
 - Inspeção inicial de conteúdo, controles e mensagens.
 - Headers de hardening e revisão de privacidade.
-- PUT e DELETE foram explorados manualmente em registro próprio; PATCH foi automatizado.
+
+PUT e DELETE foram explorados manualmente no início e depois incluídos em `tests/api/employees-methods-and-cache.spec.js`, junto com GET por ID e cache. PATCH permanece em `tests/api/employees-security.spec.js`. Toda mutação usa apenas o ID devolvido pela criação do próprio teste e limpeza em `finally`.
+
+## Mocks e sincronização
+
+Os cenários de lista vazia, carregamento, GET 500 e lista longa usam `page.route`. Eles validam somente a reação da interface a estados controlados; não provam que o backend real produz esses estados. Essa opção evita derrubar, poluir ou carregar a API compartilhada, e os mocks não persistem dados.
+
+A maior parte da suíte espera DOM, resposta HTTP ou estado observável. Há uma janela controlada de 1 segundo no teste de duplo clique para detectar um segundo POST atrasado. Ela é uma limitação conhecida e pode ser substituída por instrumentação de eventos quando houver um sinal de conclusão específico do produto.
 
 ## O que não foi testado
 
@@ -58,7 +65,7 @@ Cadastro e `/employees` foram priorizados porque concentram entrada, armazenamen
 - Alinhar contrato e regras de negócio com produto.
 - Validar tipo, tamanho, erro de upload e persistência depois que o produto passar a enviar o arquivo.
 - Testar navegadores adicionais e breakpoints intermediários.
-- Validar estados de erro com mock de rede controlado.
+- Revalidar estados de erro mockados depois que o produto implementar mensagens e recuperação.
 - Executar auditoria de acessibilidade completa.
 - Criar pipeline CI manual/gatilhado com ambiente isolado e dados próprios.
 - Reexecutar BUG-007 várias vezes em ambiente dedicado para medir a condição de corrida.

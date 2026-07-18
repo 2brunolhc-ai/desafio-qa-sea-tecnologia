@@ -93,8 +93,10 @@ test('ASO selecionado é incluído na requisição de cadastro', async ({ page, 
     expect(response.status()).toBe(201);
     created = await response.json();
 
-    const sentPayload = response.request().postDataJSON();
-    expect(JSON.stringify(sentPayload)).toContain('aso-ficticio.txt');
+    const sentRequest = response.request();
+    const sentPayload = sentRequest.postData() || '';
+    const sentContentType = sentRequest.headers()['content-type'] || '';
+    expect(`${sentContentType}\n${sentPayload}`).toContain('aso-ficticio.txt');
   } finally {
     await cleanupEmployee(request, created);
   }
@@ -247,12 +249,13 @@ test('lista longa permite alcançar o último funcionário', async ({ page }) =>
 test('duplo clique em Salvar cria apenas um registro', async ({ page, request }) => {
   const employee = createEmployeeData().state.employee;
   const created = [];
+  const postResponses = [];
 
-  page.on('response', async (response) => {
+  page.on('response', (response) => {
     if (response.url().endsWith('/employees') &&
         response.request().method() === 'POST' &&
         response.status() === 201) {
-      created.push(await response.json());
+      postResponses.push(response);
     }
   });
 
@@ -261,6 +264,11 @@ test('duplo clique em Salvar cria apenas um registro', async ({ page, request })
     await fillEmployeeForm(page, employee);
     await page.getByRole('button', { name: 'Salvar' }).dblclick();
     await page.waitForTimeout(1_000);
+
+    for (const response of postResponses) {
+      const record = await response.json();
+      if (record?.id) created.push(record);
+    }
 
     expect(created).toHaveLength(1);
   } finally {

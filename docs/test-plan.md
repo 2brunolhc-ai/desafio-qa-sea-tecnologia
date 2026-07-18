@@ -22,9 +22,9 @@ Validar o cadastro e a consulta de trabalhadores, a consistência entre interfac
 - Pentest invasivo, força bruta e exploração: incompatíveis com o teste responsável.
 - Alteração ou exclusão de registros preexistentes.
 - Compatibilidade completa: somente Chromium foi executado.
-- Acessibilidade completa: foi verificada apenas associação básica de rótulos.
+- Acessibilidade completa: foram verificadas associação de rótulos e semântica/foco dos ícones, sem leitor de tela.
 - Dispositivos físicos.
-- Upload de ASO com arquivo sintético, apenas para verificar se a seleção chega à requisição; nenhum documento real foi usado.
+- Documento ASO real e validações de tipo/tamanho/antivírus; a seleção foi coberta somente com fixture sintética.
 - Busca, paginação, ordenação, edição e exclusão web: controles não existem na interface observada.
 
 ## 4. Abordagem
@@ -100,6 +100,37 @@ Execução da suíte-base: 17/07/2026, 23 testes, 12 aprovados e 11 reprovados. 
 | Controles de cadastro | EPI adicional, atividade adicional, ASO e POST 500 | BUG-008 a BUG-011 |
 | Navegação | três pontos, seis ícones laterais e nove etapas | BUG-012/013 e observação de etapas |
 | Estados da lista | vazio, carregando, erro 500 e 15 itens | BUG-014/015 |
-| API | 14 entradas inválidas, POST/PUT/DELETE/GET por ID e cache | BUG-001/002 e SEC-006 |
+| API | 14 entradas inválidas no arquivo (9 novas), POST/PUT/DELETE/GET por ID e cache | BUG-001/002 e SEC-006 |
 
 Os testes dessa extensão estão em `tests/web/employee-advanced.spec.js`, `tests/api/employees-validation.spec.js` e `tests/api/employees-methods-and-cache.spec.js`.
+
+Composição incremental: base 23 + web 12 + validações novas de API 9 + métodos/cache 5 = 49. O arquivo de validação possui 14 testes no total porque cinco já pertenciam à base.
+
+## 10. Matriz de rastreabilidade
+
+| Requisito | Documento | Teste/evidência | Status e inconsistência |
+| --- | --- | --- | --- |
+| Entendimento da interface | `exploratory-notes.md` | specs web; `EXP-002-formulario-desktop.png` | coberto; página única e controles mapeados |
+| Entendimento/contrato da API | `ui-api-analysis.md` | `employees-get.spec.js`, `employees-post.spec.js` | coberto; contrato observado, sem documentação oficial |
+| Cadastro completo | `test-summary.md` | `employee-registration.spec.js` | aprovado com seleções explícitas |
+| Campos obrigatórios/frontend | `exploratory-notes.md` | `employee-validation.spec.js` | HTML bloqueia vazio/CPF curto |
+| Validação backend | `bug-report.md` | `employees-validation.spec.js`; BUG-002 | defeito: aceita 14 payloads inválidos no histórico |
+| Listagem/filtro de ativos | `test-summary.md` | `employee-list.spec.js` | aprovado com registro próprio |
+| API → UI | `ui-api-analysis.md` | `ui-api-consistency.spec.js` — “API para interface...” | coberto, inclusive máscara do CPF |
+| UI → API | `ui-api-analysis.md` | `ui-api-consistency.spec.js` — “interface para API...” | coberto; defaults divergem em BUG-005 |
+| Responsividade | `bug-report.md` | BUG-004 screenshot/teste 390 px | defeito confirmado; sem dispositivo físico |
+| Acessibilidade básica | relatórios BUG-006/013 | `employee-validation.spec.js`, `employee-advanced.spec.js` | rótulos/navegação falham; auditoria completa fora |
+| Autenticação/autorização | documentos de segurança | `employees-security.spec.js`, `employees-methods-and-cache.spec.js` | defeito: leitura e mutações anônimas |
+| CORS | `security-privacy-analysis.md` | `employees-security.spec.js` | agravante; não vulnerabilidade crítica isolada |
+| Cache | `security-privacy-deep-audit.md` | `employees-methods-and-cache.spec.js` | defeito/agravante: histórico `public` |
+| Métodos REST | `ui-api-analysis.md` | specs GET/POST/security/métodos | OPTIONS, HEAD, GET, POST, PUT, PATCH, DELETE cobertos |
+| Upload de ASO | BUG-010 | fixture sintética + `employee-advanced.spec.js` | seleção não chega ao POST; sem arquivo real |
+| Múltiplos EPIs | BUG-009 | “Adicionar EPI...” | defeito: segundo conjunto não é criado |
+| Múltiplas atividades | BUG-008 | “Adicionar outra atividade...” | defeito: controle submete formulário |
+| Erro 500 ao salvar | BUG-011 | `page.route` em `employee-advanced.spec.js` | UI fecha/omite feedback; backend real não foi derrubado |
+| Lista vazia/carregamento/erro | BUG-014 | três mocks em `employee-advanced.spec.js` | UI sem estados; mocks não provam backend |
+| Lista longa | BUG-015 | 15 objetos mockados | recorte sem rolagem; não é carga |
+| Duplo clique | `deep-audit-execution.md` | “duplo clique em Salvar...” | aprovado historicamente; janela controlada de 1 s |
+| Limpeza | README/estratégia | `cleanupEmployee` e verificação por prefixo | ID próprio, guarda e `finally`; alvo obrigatório: zero remanescentes |
+| Limites éticos/privacidade | documentos de segurança | evidências sanitizadas, `.gitignore` | sem mutação de terceiros, carga ou respostas completas |
+| Uso de IA | `ai-usage-diary.md` | exemplos de erros/correções | participação ampla e transparente |

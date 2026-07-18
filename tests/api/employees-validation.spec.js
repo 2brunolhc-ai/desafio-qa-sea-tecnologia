@@ -75,7 +75,7 @@ const invalidScenarios = [
 
 for (const scenario of invalidScenarios) {
   test(scenario.title, async ({ request }) => {
-    const { marker, data } = scenario.build();
+    const { data } = scenario.build();
     let created;
     let response;
 

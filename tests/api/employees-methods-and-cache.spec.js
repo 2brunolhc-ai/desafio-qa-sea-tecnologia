@@ -7,10 +7,11 @@ import {
 } from '../helpers/apiHelpers.js';
 
 test('POST de trabalhador exige autenticação', async ({ request }) => {
-  const creation = await createEmployee(request, createEmployeeData());
-  let created = creation.response.status() === 201 ? creation.body : undefined;
+  let created;
 
   try {
+    const creation = await createEmployee(request, createEmployeeData());
+    created = creation.response.status() === 201 ? creation.body : undefined;
     expect([401, 403]).toContain(creation.response.status());
   } finally {
     await cleanupEmployee(request, created);
@@ -18,10 +19,11 @@ test('POST de trabalhador exige autenticação', async ({ request }) => {
 });
 
 test('PUT de trabalhador exige autenticação ou autorização', async ({ request }) => {
-  const creation = await createEmployee(request, createEmployeeData());
-  let created = creation.response.status() === 201 ? creation.body : undefined;
+  let created;
 
   try {
+    const creation = await createEmployee(request, createEmployeeData());
+    created = creation.response.status() === 201 ? creation.body : undefined;
     expect(creation.response.status()).toBe(201);
     const response = await request.put(`${EMPLOYEES_URL}/${created.id}`, {
       data: {
@@ -40,10 +42,11 @@ test('PUT de trabalhador exige autenticação ou autorização', async ({ reques
 });
 
 test('DELETE de trabalhador exige autenticação ou autorização', async ({ request }) => {
-  const creation = await createEmployee(request, createEmployeeData());
-  let created = creation.response.status() === 201 ? creation.body : undefined;
+  let created;
 
   try {
+    const creation = await createEmployee(request, createEmployeeData());
+    created = creation.response.status() === 201 ? creation.body : undefined;
     expect(creation.response.status()).toBe(201);
     const response = await request.delete(`${EMPLOYEES_URL}/${created.id}`);
 
@@ -58,10 +61,11 @@ test('DELETE de trabalhador exige autenticação ou autorização', async ({ req
 });
 
 test('GET por identificador exige autenticação', async ({ request }) => {
-  const creation = await createEmployee(request, createEmployeeData());
-  const created = creation.response.status() === 201 ? creation.body : undefined;
+  let created;
 
   try {
+    const creation = await createEmployee(request, createEmployeeData());
+    created = creation.response.status() === 201 ? creation.body : undefined;
     expect(creation.response.status()).toBe(201);
     const response = await request.get(`${EMPLOYEES_URL}/${created.id}`);
     expect([401, 403]).toContain(response.status());

@@ -1,0 +1,20 @@
+Auditoria final do repositório — 17/07/2026 21:38 UTC-03:00
+
+Instalação limpa: npm ci — código 0, 3 pacotes, 0 vulnerabilidades.
+Chromium: npx playwright install chromium — código 0.
+Sintaxe: 13 arquivos de testes/helpers e playwright.config.js — código 0.
+Descoberta: 49 testes em 10 specs — código 0.
+
+Direcionados:
+- GET por ID: 1 aprovado.
+- Nome nulo: 1 reprovado porque o backend retornou 201 em vez de 400/422.
+- UI para API: 1 aprovado.
+- API para UI: 1 aprovado.
+- Web complementar: 1 aprovado, 11 reprovados por comportamento documentado.
+- Smoke de apresentação: 5 aprovados em 6,0 s.
+
+Suíte completa: 49 executados; 13 aprovados; 36 reprovados; 0 bloqueados; 2,9 min; código 1 esperado.
+Classificação: 36 defeitos reproduzidos; 0 falhas técnicas, de infraestrutura ou de seletor novo.
+Limpeza filtrada: 0 registros com prefixo QA Automacao.
+
+Este resumo não contém corpo da API, IDs, cookies, tokens ou dados pessoais.

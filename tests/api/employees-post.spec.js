@@ -11,6 +11,7 @@ test('POST cadastra trabalhador fictício com contrato completo', async ({ reque
     created = creation.body;
 
     expect(creation.response.status()).toBe(201);
+    expect(creation.parseDiagnostic).toBeNull();
     expect(created.id).toBeDefined();
     expect(created.state.employee).toEqual(data.state.employee);
   } finally {

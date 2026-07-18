@@ -1,103 +1,105 @@
-# Roteiro de apresentação — 35 minutos
+# Roteiro de apresentação — 30 a 40 minutos
 
-## 1. Introdução — 2 minutos
+## Aberturas prontas
 
-- Objetivo: avaliar cadastro, API, integração, segurança e privacidade.
-- Restrições: ambiente compartilhado, sem dados reais e sem ações destrutivas em terceiros.
-- Resultado: suíte-base com 23 testes (12 aprovados, 11 reprovados) e auditoria profunda com 31 cenários adicionais; os testes negativos permanecem vermelhos para evidenciar defeitos.
+**Em 20 segundos:** “Avaliei o cadastro web e a API de trabalhadores com Playwright, priorizando controle de acesso, integridade e privacidade. A versão ampliada tem 49 testes e documenta 15 bugs sem alterar dados de terceiros; os testes vermelhos reproduzem riscos reais do produto.”
 
-## 2. Entendimento do sistema — 5 minutos
+**Em 60 segundos:** “Comecei explorando a página única e o contrato `{ state: { employee } }` de `/employees`. A base tinha 23 testes e sete bugs. A auditoria acrescentou 12 testes web e 14 testes incrementais de API — nove validações e cinco cenários de métodos/cache — chegando a 49 e mais oito bugs. Usei um worker, dados únicos `QA Automacao`, ID retornado pela criação, guarda de propriedade e limpeza em `finally`. Estados difíceis da lista foram mockados somente no navegador; segurança e integração foram testadas contra a API real. IA participou amplamente, mas cada hipótese foi confrontada com execução e evidência sanitizada.”
 
-- Mostrar a página única, listagem e formulário.
-- Explicar que não existem etapas/rotas reais apesar de `Próximo passo`.
-- Apresentar contrato `{ state: { employee } }` e endpoint `/employees`.
-- Destacar campos obrigatórios, seletores e máscara de CPF.
+## Roteiro de 35 minutos
 
-## 3. Estratégia e riscos — 5 minutos
+1. **Contexto e limites — 3 min:** aplicação compartilhada, somente Chromium, nenhum dado real, carga ou teste invasivo.
+2. **Entendimento — 5 min:** página única, listagem, formulário, máscara de CPF e contrato da API.
+3. **Estratégia — 5 min:** risco primeiro, um worker, `finally`, ID próprio e guarda de cleanup.
+4. **Bugs prioritários — 9 min:** BUG-001, BUG-002, BUG-010, BUG-011 e BUG-014/015.
+5. **Código e execução — 8 min:** factory, helper, um positivo e uma falha conhecida.
+6. **Segurança, privacidade e IA — 3 min:** acesso anônimo, cache/CORS como agravantes, evidências reduzidas e validação humana da IA.
+7. **Recomendação e perguntas — 2 min:** bloquear uso real até autenticação/autorização e validação server-side.
 
-- Risco primeiro: acesso anônimo, integridade e persistência.
-- Dados únicos `QA Automacao` e limpeza em `finally`.
-- Um worker para reduzir impacto.
-- Fora do escopo: carga, invasivo, browsers completos, dispositivos e documentos ASO reais; o upload foi exercitado com arquivo sintético.
+## Números que precisam fechar
 
-## 4. Defeitos principais — 9 minutos
+- Suíte-base: 23 testes; histórico de 12 aprovados e 11 reprovados; BUG-001 a BUG-007.
+- Web complementar: +12.
+- API complementar: +9 validações e +5 métodos/cache = +14.
+- Versão ampliada: 23 + 12 + 14 = 49 testes.
+- Auditoria complementar: BUG-008 a BUG-015, oito bugs.
+- Versão atual: 15 bugs documentados. O resultado atual deve ser lido em `docs/test-summary-deep-audit.md`, separado do histórico de 13 aprovados e 36 reprovados.
 
-1. **BUG-001:** GET/PATCH/DELETE sem autenticação; mostrar requisição sanitizada.
-2. **BUG-002:** cinco payloads inválidos retornam 201.
-3. **BUG-005:** defaults exibidos não chegam à API.
-4. **BUG-004:** mostrar screenshot em 390 px.
+## Demonstração segura
 
-Na rodada profunda, demonstrar também BUG-008 (atividade submete), BUG-010 (ASO não enviado), BUG-011 (500 fecha sem feedback), BUG-012/013 (menus sem ação) e BUG-014/015 (estados da lista e recorte). O roteiro detalhado está em `docs/bug-report-deep-audit.md`.
+```bash
+npx playwright test --list
+npm run test:smoke -- --reporter=line
+npx playwright test tests/api/employees-validation.spec.js -g "rejeita nome nulo" --reporter=line
+```
 
-Explicar por que segurança/validação são altas e os defeitos de interface são médios.
+Se houver tempo, mostrar os dois sentidos de consistência separadamente:
 
-## 5. Automação — 8 minutos
+```bash
+npx playwright test tests/web/ui-api-consistency.spec.js -g "interface para API" --reporter=line
+npx playwright test tests/web/ui-api-consistency.spec.js -g "API para interface" --reporter=line
+```
 
-- Estrutura `tests/api`, `tests/web`, `tests/helpers`.
-- Demonstrar factory e guarda de cleanup.
-- Rodar `npm run test:api` ou um teste positivo curto.
-- Mostrar um teste negativo falhando com 201 em vez de 400.
-- Explicar que testes de segurança falham por expectativa segura, não por erro da automação.
+O teste positivo recomendado é `GET por ID retorna o registro criado pelo teste` ou um dos dois de consistência. A falha recomendada é `rejeita nome nulo`: 400 e 422 são rejeições aceitáveis, mas o produto historicamente retorna 201 e cria o registro, que é removido no `finally`.
 
-## 6. Segurança e privacidade — 4 minutos
+## Plano B para ambiente instável
 
-- Campos pessoais retornados sem credencial; valores ocultados.
-- Escrita anônima comprovada somente em registro próprio.
-- CORS como agravante, não vulnerabilidade isolada.
-- Recomendações: autenticação, autorização, minimização, validação e auditoria.
-
-## 7. IA e conclusão — 2 minutos
-
-- IA acelerou estrutura e hipóteses.
-- Erros corrigidos: data de nascimento falsamente suspeita, CPF sem máscara, seletor dinâmico e screenshot inválido.
-- Próximos passos: corrigir altos, regressão e CI em ambiente isolado.
+- Não improvisar mutações repetidas na API compartilhada.
+- Mostrar as evidências sanitizadas em `evidence/requests/`, `evidence/logs/` e `evidence/screenshots/`.
+- Executar `npx playwright test --list` e explicar código/helper sem depender da rede.
+- Demonstrar os estados mockados de UI, deixando explícito que eles não provam comportamento do backend real.
+- Separar indisponibilidade/timeout de defeito já reproduzido; nunca declarar aprovação sem execução.
 
 ## Perguntas prováveis
 
 ### Por que Playwright?
 
-Uma ferramenta cobre navegador e API, possui espera por estado, trace, vídeo, screenshot e bom suporte a seletores semânticos.
+Um runner cobre navegador e API, oferece espera por estado/resposta, seletores semânticos e artefatos de diagnóstico. Isso reduz ferramentas sem misturar o que foi testado com backend real e o que foi simulado na interface.
 
 ### Por que JavaScript?
 
-Era obrigatório, reduz a barreira de leitura e coincide com o ecossistema do frontend.
+JavaScript não era obrigatório. Foi escolhido por legibilidade, familiaridade, integração com o ecossistema da aplicação e por permitir usar Playwright para web e API no mesmo runner.
 
-### Como os cenários foram escolhidos?
+### Por que somente um worker e zero retries?
 
-Por risco: confidencialidade/integridade, cadastro principal, validação backend e consistência UI/API.
+O endpoint é compartilhado. Um worker reduz colisão e volume; retries foram desativados para não repetir mutações ou mascarar instabilidade.
 
-### Por que BUG-001 é alta e não crítica?
+### Como a limpeza é segura?
 
-Há exposição e escrita anônimas, mas não foi demonstrado comprometimento administrativo amplo, indisponibilidade ou alteração de dados alheios.
+Cada teste usa prefixo único, guarda o ID retornado pelo próprio POST e chama cleanup em `finally`. O helper recusa DELETE sem marcador `QA Automacao`. O helper antigo que procurava registros por nome foi removido para impedir exclusão por aproximação.
 
-### O que não foi testado?
+### Há `try/catch` escondendo falhas?
 
-Carga, invasivo, browsers completos, dispositivos, validações de tamanho/tipo do upload e acessibilidade completa; há justificativas de risco e ambiente.
+Não. Asserções não são capturadas nem convertidas em sucesso. O tratamento defensivo se limita a parsing e limpeza; o helper inspeciona `Content-Type`, preserva status e produz diagnóstico com corpo sanitizado quando necessário.
 
-### Como evitar dados duplicados?
+### Há sleeps?
 
-Nome único por execução, ID retornado pela API e limpeza em `finally`. Regra de unicidade de negócio precisa ser definida no backend.
+A maior parte da suíte espera DOM ou resposta. Existe uma janela controlada de 1 segundo no cenário de duplo clique para observar um possível segundo POST atrasado; é uma limitação documentada e pode evoluir para instrumentação orientada a evento.
 
-### Como garantir independência?
+### O que os mocks provam?
 
-Cada teste cria seu registro, localiza pelo ID/nome único e o exclui. Não depende da ordem nem de registros antigos.
+Lista vazia, carregamento, GET 500 e lista longa usam `page.route` e provam apenas a reação da UI a estados controlados. Não provam que a API real retorna esses estados e não tocam dados persistidos.
 
-### Como o código de IA foi validado?
+### O CPF usado é válido?
 
-Com execução real, inspeção de falhas, correção de seletores e comparação com respostas observadas. Hipóteses não reproduzidas foram descartadas.
+`00000000000` é sintético e deliberadamente inválido como documento real. Ele serve apenas para satisfazer o comprimento exigido pela tela sem usar CPF de terceiros; a falta de validação semântica permanece um risco.
 
-### Como executar em CI?
+### PUT e DELETE foram só manuais?
 
-Usar `npm ci`, `npx playwright install --with-deps chromium` e `npm test`, preferencialmente contra ambiente isolado e com execução manual/agendada para evitar volume no endpoint público.
+Foram explorados manualmente no início e depois automatizados em `tests/api/employees-methods-and-cache.spec.js`. PATCH está em `tests/api/employees-security.spec.js`; todas as mutações atingem apenas registros próprios.
 
-### O que melhoraria com mais tempo?
+### CORS é o maior problema?
 
-Requisitos formais, ambiente isolado, upload sintético, múltiplos browsers, acessibilidade completa e reprodução determinística da atualização da lista.
+Não. O principal problema é ausência de autenticação/autorização. `Access-Control-Allow-Origin` amplo — observado inclusive como `*, *` — agrava a superfície, mas não foi classificado como vulnerabilidade crítica isolada.
 
-### Qual é o maior risco?
+### Como a IA foi usada?
 
-A combinação de dados de trabalhadores acessíveis anonimamente com métodos de escrita também anônimos.
+Em planejamento, estrutura inicial, código, cenários, execução assistida, revisão, documentos e auditoria complementar. Erros concretos foram removidos ou corrigidos: falsa perda de nascimento, CPF sem máscara, ID `rc_select` dinâmico, screenshot inválido, exagero de CORS e expectativas incorretas sobre controles secundários.
 
-### Como diferenciar bug de comportamento não documentado?
+### O que ficou fora?
 
-Foi exigida reprodução e um resultado esperado fundamentado em segurança, integridade, semântica visível ou consistência entre UI e API. Duplicidade e texto placeholder ficaram como dúvida/observação quando faltou regra.
+Outros browsers, dispositivos físicos, carga/stress, pentest invasivo, acessibilidade completa com leitor de tela, backend interno e upload com documento real. O ASO foi exercitado apenas com fixture sintética.
+
+### Como explicar uma suíte vermelha?
+
+O código 1 é esperado enquanto o produto descumprir expectativas seguras e funcionais. A explicação precisa separar defeitos reproduzidos de infraestrutura, timeout, seletor quebrado ou erro do teste. Uma suíte verde obtida afrouxando asserções esconderia os riscos documentados.

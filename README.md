@@ -23,11 +23,11 @@ Validar o cadastro web, a API `/employees`, a consistência entre as duas camada
 ## Instalação
 
 ```bash
-npm install
+npm ci
 npx playwright install chromium
 ```
 
-Os dois comandos foram executados com sucesso em 17/07/2026. O `npm install` reportou zero vulnerabilidades nas dependências instaladas.
+Os dois comandos foram executados com sucesso em 17/07/2026. O `npm ci` reportou zero vulnerabilidades nas dependências instaladas.
 
 ## Configuração
 
@@ -46,14 +46,23 @@ Não há token configurado porque a aplicação observada não exige autenticaç
 npm test
 npm run test:web
 npm run test:api
+npm run test:smoke
+npm run test:deep-audit
 npm run test:headed
 npm run test:debug
 npm run test:report
 ```
 
-`npm run test:report` deve ser usado depois de uma execução, pois abre o relatório HTML gerado. A suíte completa termina com código 1 enquanto as expectativas seguras/funcionais associadas aos defeitos confirmados continuarem falhando.
+- `npm test`: os 49 testes, incluindo expectativas de defeitos conhecidos.
+- `npm run test:web` / `npm run test:api`: recortes por camada.
+- `npm run test:smoke`: cinco cenários positivos de GET e consistência UI/API.
+- `npm run test:deep-audit`: os três arquivos ampliados; lista 31 testes porque o arquivo de validação contém cinco testes da base e nove novos.
+- `npm run test:headed` e `npm run test:debug`: apoio à demonstração e diagnóstico.
+- `npm run test:report`: abre o relatório local depois de uma execução.
 
-## Resultado final
+A suíte completa termina com código 1 enquanto as expectativas seguras/funcionais associadas aos defeitos confirmados continuarem falhando. Nenhum comando omite essas falhas silenciosamente.
+
+## Linha de base histórica
 
 | Métrica | Valor |
 | --- | ---: |
@@ -84,12 +93,16 @@ desafio-qa-sea-tecnologia/
 ├── docs/
 │   ├── ai-usage-diary.md
 │   ├── bug-report.md
+│   ├── bug-report-deep-audit.md
+│   ├── deep-audit-execution.md
 │   ├── exploratory-notes.md
 │   ├── presentation-guide.md
 │   ├── security-privacy-analysis.md
+│   ├── security-privacy-deep-audit.md
 │   ├── strategy-note.md
 │   ├── test-plan.md
 │   ├── test-summary.md
+│   ├── test-summary-deep-audit.md
 │   └── ui-api-analysis.md
 ├── evidence/
 │   ├── logs/
@@ -98,6 +111,7 @@ desafio-qa-sea-tecnologia/
 │   └── videos/
 ├── tests/
 │   ├── api/
+│   ├── fixtures/
 │   ├── helpers/
 │   └── web/
 ├── .env.example
@@ -109,11 +123,28 @@ desafio-qa-sea-tecnologia/
 
 ## Atualização — auditoria profunda
 
-Depois da suíte-base de 23 testes, foi executada uma rodada complementar com 12 testes web de controles/estados e 19 testes de API. Ela cobre ASO sintético, EPI/atividades adicionais, menus, etapas, lista vazia/carregando/erro, lista longa, métodos REST e cache. Os resultados e a distinção entre defeitos confirmados e observações estão em [auditoria profunda](docs/deep-audit-execution.md) e [relatório complementar](docs/bug-report-deep-audit.md).
+Depois da suíte-base de 23 testes, foram adicionados 12 testes web e 14 testes incrementais de API: nove validações novas no arquivo que passou a ter 14 casos no total, mais cinco cenários de métodos/cache. A composição correta é **23 + 12 + 9 + 5 = 49**, ou **23 + 12 + 14 = 49**. A extensão cobre ASO sintético, EPI/atividades adicionais, menus, etapas, lista vazia/carregando/erro, lista longa, métodos REST e cache. Os resultados e a distinção entre defeitos confirmados e observações estão em [auditoria profunda](docs/deep-audit-execution.md) e [relatório complementar](docs/bug-report-deep-audit.md).
 
 Os testes negativos permanecem vermelhos de propósito quando o produto aceita um comportamento inseguro ou inconsistente. A execução confirmou **0 registros `QA Automacao` remanescentes**.
 
-Na execução completa desta versão: **49 testes, 13 aprovados e 36 reprovados**. As reprovações são os defeitos reproduzidos e não falhas silenciosas do runner; veja `docs/test-summary-deep-audit.md`.
+Na execução histórica da versão ampliada: **49 testes, 13 aprovados e 36 reprovados**. O resultado da auditoria final atual está separado em `docs/test-summary-deep-audit.md`; números históricos não são apresentados como execução nova.
+
+## Resultado atual — auditoria final
+
+Execução de 17/07/2026 às 21:38 (UTC−03:00):
+
+| Métrica | Valor |
+| --- | ---: |
+| Descobertos/executados | 49/49 |
+| Aprovados | 13 |
+| Reprovados por comportamento documentado | 36 |
+| Bloqueados | 0 |
+| Falhas técnicas/infraestrutura | 0 |
+| Duração Playwright | 2,9 min |
+| Registros `QA Automacao` remanescentes | 0 |
+| Bugs documentados | 15 (7 base + 8 complementares) |
+
+Os quatro testes direcionados confirmaram: GET por ID aprovado, UI → API aprovado, API → UI aprovado e rejeição de nome nulo reprovada porque o backend retornou 201. A suíte web complementar manteve 1 aprovado e 11 reprovações de produto.
 
 ## Estratégia
 
@@ -123,7 +154,9 @@ Na execução completa desta versão: **49 testes, 13 aprovados e 36 reprovados*
 - Nomes únicos com prefixo `QA Automacao`.
 - Limpeza em `finally`.
 - O helper recusa excluir registros sem marcador próprio.
-- Falhas do produto permanecem visíveis; não há `try/catch` que as esconda.
+- Falhas do produto permanecem visíveis. Não há `try/catch` usado para ocultar asserções ou converter defeitos em sucesso; existe tratamento defensivo apenas para parsing e limpeza.
+- O helper inspeciona `Content-Type` antes do parsing e preserva status e prévia sanitizada quando o corpo não é JSON válido.
+- Retries estão desativados inclusive em CI para não repetir mutações nem mascarar instabilidade.
 
 ## Dados de teste
 

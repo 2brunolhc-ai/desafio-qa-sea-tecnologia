@@ -2,10 +2,30 @@
 
 ## Resultado
 
-- Web complementar: **12 testes**, **1 aprovado**, **11 reprovados por comportamento do produto**.
-- API complementar: **19 testes**, todos reprovados pelas expectativas de validação/segurança (201/200 em vez de 400/422 ou 401/403; cache público).
-- Suíte completa após a extensão: **49 testes**, **13 aprovados**, **36 reprovados**, duração aproximada de 2,5 minutos.
-- Limpeza: **0 registros `QA Automacao`** encontrados após a execução.
+### Histórico da primeira execução ampliada
+
+- Base: **23 testes** — 12 aprovados e 11 reprovados.
+- Web complementar: **+12** — 1 aprovado e 11 reprovados por comportamento do produto.
+- API complementar incremental: **+14** — nove validações novas e cinco cenários de métodos/cache, todos reprovados no histórico.
+- Total ampliado: **49 testes** — 13 aprovados, 36 reprovados, 0 bloqueados, duração aproximada de 2,5 minutos.
+- Limpeza histórica: **0 registros `QA Automacao`**.
+
+O arquivo `employees-validation.spec.js` tem 14 testes no total, dos quais cinco já integravam a base. Portanto, a composição nunca é `23 + 12 + 19`; o incremento correto é `23 + 12 + 14 = 49`.
+
+### Auditoria final atual
+
+- Data/hora registrada: **17/07/2026 21:38 (UTC−03:00)**.
+- Comando: `npm test -- --reporter=line`.
+- Descobertos/executados: **49/49**.
+- Aprovados: **13**.
+- Reprovados: **36** — 21 expectativas de API e 15 de interface, todas associadas aos comportamentos documentados.
+- Bloqueados: **0**.
+- Falhas técnicas, de infraestrutura ou de seletor novo: **0**.
+- Duração Playwright: **2,9 min** (174,6 s de processo).
+- Código de saída: **1**, esperado enquanto os defeitos permanecerem.
+- Registros `QA Automacao` remanescentes: **0**, verificados por consulta filtrada sem imprimir a coleção.
+
+O ambiente não mudou de forma relevante em relação ao histórico: 13/36 permaneceu confirmado. Testes direcionados adicionais passaram para GET por ID, UI → API e API → UI; “rejeita nome nulo” falhou porque recebeu 201, confirmando defeito de produto e não erro do runner.
 
 ## Aprovado relevante
 

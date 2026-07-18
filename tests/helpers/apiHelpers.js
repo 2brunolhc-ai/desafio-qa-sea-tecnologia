@@ -7,18 +7,39 @@ export const API_BASE_URL = (
 
 export const EMPLOYEES_URL = `${API_BASE_URL}/employees`;
 
+function sanitizeBodyPreview(text) {
+  return text
+    .replace(/\b\d{3}\.\d{3}\.\d{3}-\d{2}\b/g, '[DADO OCULTADO]')
+    .replace(/\b\d{11}\b/g, '[DADO OCULTADO]')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 300);
+}
+
 export async function createEmployee(request, data) {
   const response = await request.post(EMPLOYEES_URL, { data });
+  const contentType = response.headers()['content-type'] || '';
+  const rawBody = await response.text();
   let body = null;
+  let parseDiagnostic = null;
 
-  try {
-    body = await response.json();
-  } catch {
-    // Mantém a resposta disponível para validar status e headers mesmo se o
-    // servidor devolver um corpo vazio ou não JSON.
+  if (!/\bjson\b/i.test(contentType)) {
+    parseDiagnostic = `HTTP ${response.status()} com Content-Type não JSON (${contentType || 'ausente'}).`;
   }
 
-  return { response, body };
+  if (rawBody.trim()) {
+    try {
+      body = JSON.parse(rawBody);
+    } catch {
+      const preview = sanitizeBodyPreview(rawBody) || '[CORPO VAZIO]';
+      parseDiagnostic = [
+        parseDiagnostic,
+        `Corpo não pôde ser desserializado como JSON: ${preview}`,
+      ].filter(Boolean).join(' ');
+    }
+  }
+
+  return { response, body, parseDiagnostic };
 }
 
 export async function getEmployeeById(request, id) {
@@ -49,13 +70,4 @@ export async function cleanupEmployee(request, record) {
   );
 
   expect([200, 204]).toContain(response.status());
-}
-
-export async function findEmployeeByName(request, name) {
-  const response = await request.get(EMPLOYEES_URL);
-  expect(response.status()).toBe(200);
-  const body = await response.json();
-  return Array.isArray(body)
-    ? body.find((item) => item?.state?.employee?.name === name)
-    : undefined;
 }

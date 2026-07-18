@@ -1,4 +1,4 @@
-Execução final — 17/07/2026
+Execução histórica da primeira versão ampliada — 17/07/2026
 
 Comando: npm test -- --reporter=line
 Total: 49

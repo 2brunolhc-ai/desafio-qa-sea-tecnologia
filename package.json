@@ -8,6 +8,8 @@
     "test": "playwright test",
     "test:web": "playwright test tests/web",
     "test:api": "playwright test tests/api",
+    "test:smoke": "playwright test tests/api/employees-get.spec.js tests/web/ui-api-consistency.spec.js",
+    "test:deep-audit": "playwright test tests/web/employee-advanced.spec.js tests/api/employees-validation.spec.js tests/api/employees-methods-and-cache.spec.js",
     "test:headed": "playwright test tests/web --headed",
     "test:debug": "playwright test --debug",
     "test:report": "playwright show-report"
