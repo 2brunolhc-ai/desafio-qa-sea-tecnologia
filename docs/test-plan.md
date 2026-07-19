@@ -153,3 +153,17 @@ Composição incremental: base 23 + web 12 + validações novas de API 9 + méto
 | API-038 | Método | TRACE rejeitado | aprovado: 405 | controle positivo |
 
 Composição atual: **49 cenários anteriores + 12 novos = 61**. Resultado: **15 aprovados e 46 reprovados**, sem falha de infraestrutura e com zero registros QA remanescentes.
+
+## 12. Extensão - integridade, concorrência, privacidade e acessibilidade
+
+| Área | Cenários adicionados | Resultado |
+| --- | ---: | --- |
+| API | PATCH parcial, ETag/escrita concorrente e ID controlado pelo cliente | 3 reprovados |
+| Web funcional | CPF alfabético, data futura e dois sentidos de `usesEpi` | 4 reprovados |
+| Privacidade/resiliência | CPF integral e JSON malformado | 2 reprovados |
+| Acessibilidade | foco, contraste, landmarks, voltar e grupos | 1 aprovado, 4 reprovados |
+| Lista | filtro de ativos e limpeza | 1 aprovado |
+| Assets | fonte e favicon | 1 reprovado |
+| Navegação segura | voltar não envia cadastro válido | 1 aprovado |
+
+Composição consolidada: **61 + 17 = 78 cenários**. Resultado: **18 aprovados e 60 reprovados por comportamento do produto**. Os testes estão em `tests/web/deeper-ui-audit.spec.js` e `tests/api/data-integrity-and-concurrency.spec.js`.

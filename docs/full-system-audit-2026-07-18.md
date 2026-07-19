@@ -2,7 +2,9 @@
 
 ## Resumo executivo
 
-Auditoria executada em 18/07/2026 contra `https://analista-teste.seatecnologia.com.br/`, usando Chromium, Playwright, inspeção visual/DOM, requisições HTTP controladas e leitura do bundle JavaScript público. A rodada ampliada contém **61 testes: 15 aprovados e 46 reprovados por comportamento do produto**, sem bloqueio ou falha de infraestrutura. A limpeza terminou com **0 registros `QA Automacao`**.
+Auditoria executada em 18/07/2026 contra `https://analista-teste.seatecnologia.com.br/`, usando Chromium, Playwright, inspeção visual/DOM, requisições HTTP controladas e leitura do bundle JavaScript público. A regressão integral contém **78 testes: 18 aprovados e 60 reprovados por comportamento do produto**, sem timeout, skip ou interrupção, em 274,6 segundos. A limpeza final encontrou **zero registros `QA Automacao`**.
+
+O complemento mais recente encontrou nove defeitos adicionais, incluindo a inversão de `usesEpi` e perda silenciosa de campos em PATCH parcial. Veja [deepest-audit-2026-07-18.md](deepest-audit-2026-07-18.md).
 
 Os problemas relatados pelo usuário foram confirmados:
 
@@ -88,7 +90,7 @@ O switch muda de `aria-checked=false` para `true` e mostra `CONCLUIDO` na primei
 
 Essas causas explicam os testes funcionais; não substituem a reprodução de caixa-preta.
 
-## Consolidação dos 19 defeitos
+## Consolidação dos 28 defeitos
 
 | ID | Título resumido | Severidade | Status |
 | --- | --- | --- | --- |
@@ -111,10 +113,19 @@ Essas causas explicam os testes funcionais; não substituem a reprodução de ca
 | BUG-017 | placeholder e metadados de template | média | confirmado |
 | BUG-018 | elementos humanos sem contexto acessível | baixa | confirmado |
 | BUG-019 | shell móvel recortado e sobreposto | média | confirmado |
+| BUG-020 | `usesEpi` persistido com sentido invertido | alta | confirmado nos dois ramos |
+| BUG-021 | PATCH parcial apaga campos não enviados | alta | confirmado |
+| BUG-022 | API aceita ID definido pelo cliente | média | confirmado |
+| BUG-023 | UI envia CPF alfabético e data futura | média | confirmado |
+| BUG-024 | lista exibe CPF completo | média | confirmado com dado sintético |
+| BUG-025 | contraste e landmarks insuficientes | média | confirmado |
+| BUG-026 | controles/grupos sem semântica adequada | baixa | confirmado |
+| BUG-027 | fontes e favicon retornam erro | baixa | confirmado |
+| BUG-028 | JSON malformado sem alerta/retry | média | confirmado com resposta controlada |
 
-Totais por severidade: **3 altas, 14 médias e 2 baixas**.
+Totais por severidade: **5 altas, 19 médias e 4 baixas**.
 
-Detalhes da base: [bug-report.md](bug-report.md). Complemento anterior: [bug-report-deep-audit.md](bug-report-deep-audit.md). Novos achados: [bug-report-shell-navigation.md](bug-report-shell-navigation.md).
+Detalhes da base: [bug-report.md](bug-report.md). Complementos: [bug-report-deep-audit.md](bug-report-deep-audit.md), [bug-report-shell-navigation.md](bug-report-shell-navigation.md) e [bug-report-deepest.md](bug-report-deepest.md).
 
 ## API e segurança
 
@@ -143,14 +154,14 @@ Relatório técnico: [security-hardening-2026-07-18.md](security-hardening-2026-
 
 | Métrica | Valor |
 | --- | ---: |
-| Testes descobertos/executados | 61/61 |
-| Aprovados | 15 |
-| Reprovados por produto | 46 |
-| Falhas de API/segurança | 26 |
-| Falhas web | 20 |
+| Testes descobertos/executados | 78/78 |
+| Aprovados | 18 |
+| Reprovados por produto | 60 |
+| Falhas de API/segurança | 29 |
+| Falhas web | 31 |
 | Bloqueados | 0 |
 | Falhas de infraestrutura | 0 |
-| Duração | 3,7 min |
+| Duração integral | 274,6 s (4min34,6s) |
 | Registros QA remanescentes | 0 |
 
 O código de saída 1 é esperado: as asserções representam o comportamento seguro/funcional desejado e permanecem vermelhas enquanto o produto não for corrigido.

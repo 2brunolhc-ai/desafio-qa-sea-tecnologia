@@ -6,6 +6,17 @@ Projeto executável de exploração, automação e documentação da aplicação
 
 Validar o cadastro web, a API `/employees`, a consistência entre as duas camadas e riscos básicos de segurança e privacidade. A execução usa somente dados fictícios e exclui apenas os registros que cria.
 
+## Estado atual da auditoria
+
+- **78 cenários executados em uma única regressão:** 18 aprovados e 60 reprovados por comportamento do produto, sem timeout, skip ou interrupção.
+- **28 defeitos confirmados:** 5 altos, 19 médios e 4 baixos.
+- Achado crítico novo: o formulário grava `usesEpi` com sentido invertido.
+- Achados adicionais: PATCH parcial perde campos, ausência de controle de concorrência, ID controlado pelo cliente, CPF integral na lista, validação/acessibilidade/resiliência insuficientes e assets quebrados.
+- A rodada complementar de 17 testes não teve timeout, seletor quebrado ou falha do runner.
+- A regressão integral levou 274,6 segundos e terminou com zero registros `QA Automacao` remanescentes.
+
+Relatório principal: [auditoria aprofundada complementar](docs/deepest-audit-2026-07-18.md). Bugs novos: [BUG-020 a BUG-028](docs/bug-report-deepest.md). Segurança e dependências: [complemento técnico](docs/security-dependency-concurrency-2026-07-18.md).
+
 ## Tecnologias
 
 - Node.js 24.15.0 na execução registrada.
@@ -50,17 +61,19 @@ npm run test:smoke
 npm run test:deep-audit
 npm run test:shell
 npm run test:security
+npm run test:deeper
 npm run test:headed
 npm run test:debug
 npm run test:report
 ```
 
-- `npm test`: os 61 testes, incluindo expectativas de defeitos conhecidos.
+- `npm test`: todos os 78 testes, incluindo expectativas de defeitos conhecidos.
 - `npm run test:web` / `npm run test:api`: recortes por camada.
 - `npm run test:smoke`: cinco cenários positivos de GET e consistência UI/API.
 - `npm run test:deep-audit`: os três arquivos ampliados; lista 31 testes porque o arquivo de validação contém cinco testes da base e nove novos.
 - `npm run test:shell`: seis cenários de menus, etapas, conteúdo, identidade visual, mobile e saída HTML.
 - `npm run test:security`: nove cenários de autenticação, CORS, headers, cache, banners e TRACE.
+- `npm run test:deeper`: 17 cenários de integridade de EPI/PATCH/concorrência, validações, privacidade e acessibilidade complementar.
 - `npm run test:headed` e `npm run test:debug`: apoio à demonstração e diagnóstico.
 - `npm run test:report`: abre o relatório local depois de uma execução.
 

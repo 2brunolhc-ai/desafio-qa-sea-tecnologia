@@ -1,0 +1,45 @@
+AUDITORIA APROFUNDADA COMPLEMENTAR - 18/07/2026
+
+Comando: npm run test:deeper -- --reporter=list
+Descobertos/executados: 17/17
+Aprovados: 3
+Reprovados por produto: 14
+Falhas de infraestrutura/runner: 0
+Duração: 59,8 s
+
+API - 3 falhas:
+- PATCH parcial remove nome, CPF e RG não enviados.
+- GET não fornece ETag; segunda escrita com If-Match obsoleto retorna 200.
+- POST aceita identificador definido pelo cliente e retorna 201.
+
+WEB - 3 aprovações:
+- foco visível no primeiro controle alcançado por Tab.
+- voltar não envia um cadastro válido.
+- filtro de ativos e limpeza funcionam em lista sintética.
+
+WEB - 11 falhas:
+- CTAs com contraste 2,92:1.
+- zero h1, nav e aside.
+- botão voltar sem nome e com type submit implícito.
+- CPF alfabético é enviado.
+- nascimento futuro é enviado.
+- com EPI, usesEpi=false.
+- sem EPI, usesEpi=true.
+- CPF completo é exibido.
+- JSON malformado não gera alert/retry.
+- Google Fonts retorna 400 e /vite.svg retorna 404.
+- zero radiogroup, fieldset e legend.
+
+Privacidade: nenhum valor preexistente foi copiado para esta evidência.
+Observação posterior ao recorte: host da API respondeu temporariamente Service Suspended; não contado como bug definitivo.
+
+REGRESSÃO INTEGRAL APÓS RECUPERAÇÃO DO SERVIÇO
+Comando: npm test -- --reporter=./tests/helpers/summary-reporter.js
+Descobertos/executados: 78/78
+Aprovados: 18
+Reprovados por produto: 60
+Timed out: 0
+Ignorados: 0
+Interrompidos: 0
+Duração: 274,6 s
+Registros QA remanescentes: 0

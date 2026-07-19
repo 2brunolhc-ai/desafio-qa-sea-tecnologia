@@ -2,9 +2,11 @@
 
 ## Aberturas prontas
 
-**Em 20 segundos:** “Avaliei o cadastro web e a API de trabalhadores com Playwright, priorizando controle de acesso, integridade e privacidade. A versão ampliada tem 49 testes e documenta 15 bugs sem alterar dados de terceiros; os testes vermelhos reproduzem riscos reais do produto.”
+**Em 20 segundos:** “Avaliei o cadastro web e a API de trabalhadores com Playwright, priorizando controle de acesso, integridade e privacidade. A cobertura atual consolida 78 testes e 28 bugs; o achado funcional mais grave é a inversão do indicador de uso de EPI.”
 
 **Em 60 segundos:** “Comecei explorando a página única e o contrato `{ state: { employee } }` de `/employees`. A base tinha 23 testes e sete bugs. A auditoria acrescentou 12 testes web e 14 testes incrementais de API — nove validações e cinco cenários de métodos/cache — chegando a 49 e mais oito bugs. Usei um worker, dados únicos `QA Automacao`, ID retornado pela criação, guarda de propriedade e limpeza em `finally`. Estados difíceis da lista foram mockados somente no navegador; segurança e integração foram testadas contra a API real. IA participou amplamente, mas cada hipótese foi confrontada com execução e evidência sanitizada.”
+
+**Atualização de 18/07:** “A cobertura foi ampliada para 78 cenários, com 18 aprovações e 60 falhas do produto. O novo recorte comprovou que `usesEpi` é gravado invertido nos dois sentidos, PATCH parcial apaga campos e a API não protege concorrência. Diferencio claramente bug confirmado, hardening e risco de dependência sem alegar exploração não demonstrada.”
 
 ## Roteiro de 35 minutos
 
@@ -24,6 +26,9 @@
 - Versão ampliada: 23 + 12 + 14 = 49 testes.
 - Auditoria complementar: BUG-008 a BUG-015, oito bugs.
 - Versão atual: 15 bugs documentados. O resultado atual deve ser lido em `docs/test-summary-deep-audit.md`, separado do histórico de 13 aprovados e 36 reprovados.
+- Auditoria do shell/hardening: +12, chegando a 61 cenários e 19 bugs.
+- Auditoria complementar: +17, chegando a **78 cenários e 28 bugs**.
+- Resultado consolidado atual: **18 aprovados e 60 reprovados por comportamento do produto**.
 
 ## Demonstração segura
 
@@ -31,6 +36,7 @@
 npx playwright test --list
 npm run test:smoke -- --reporter=line
 npx playwright test tests/api/employees-validation.spec.js -g "rejeita nome nulo" --reporter=line
+npm run test:deeper -- --grep "usesEpi" --reporter=line
 ```
 
 Se houver tempo, mostrar os dois sentidos de consistência separadamente:
@@ -107,3 +113,7 @@ O código 1 é esperado enquanto o produto descumprir expectativas seguras e fun
 ### O que mudou na auditoria completa de 18/07?
 
 A suíte passou de 49 para 61 testes: 15 aprovados e 46 reprovados. A nova demonstração deve clicar um item lateral, uma etapa superior, concluir e então clicar em `Próximo passo`; nenhum deles muda a tela. Em seguida, mostrar `BUG-019-home-mobile-recortada.png` e explicar que o texto não sofreu corrupção de encoding: é `Lorem ipsum` literal comprimido pelo layout. Na segurança, priorizar CRUD anônimo e cache público; headers e banners são hardening secundário. TRACE 405 e HTML inerte renderizado como texto são resultados positivos.
+
+### Qual achado novo devo demonstrar primeiro?
+
+`BUG-020`. Mostre os dois testes de `usesEpi`: EPI preenchido produz `false`, e a opção de não usar EPI produz `true`. Explique o impacto como integridade de dado ocupacional, mostre o mapeamento no bundle apenas como causa auxiliar e recomende correção do contrato mais revisão dos registros afetados.
