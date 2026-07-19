@@ -1,0 +1,51 @@
+AUDITORIA COMPLETA — 18/07/2026 (UTC-03:00)
+Alvo: https://analista-teste.seatecnologia.com.br/
+
+ESCOPO NOVO
+- 6 testes web: menu lateral, etapas, placeholder/metadados, contexto humano, mobile 390 px e HTML inerte.
+- 6 testes API: headers, cache da home, banners, CORS, headers/cache da API e TRACE.
+- Inspeção visual/DOM e leitura de trechos mínimos do bundle público.
+
+EXECUÇÃO DIRECIONADA
+Comando: npx playwright test tests/web/shell-navigation-and-content.spec.js tests/api/security-hardening.spec.js --reporter=line
+Resultado: 12 executados; 2 aprovados; 10 reprovados por produto; duração 49,4 s.
+
+EXECUÇÃO COMPLETA
+Comando: npm test -- --reporter=line
+Resultado: 61 executados; 15 aprovados; 46 reprovados por produto; duração 3,7 min; exit code 1.
+Classificação: 26 falhas API/segurança e 20 falhas web.
+Infraestrutura/seletor bloqueante: 0.
+
+OBSERVAÇÕES SANITIZADAS
+- Cinco itens laterais inativos: nenhum mudou URL, conteúdo ou seleção.
+- Etapas 2 a 9: nenhuma mudança; 9/9 rótulos iguais a ITEM 1.
+- Próximo passo: nenhuma mudança após conclusão; BUG-003 reconfirmado no navegador.
+- Mobile: última etapa right=722 em viewport=390, sem scroll horizontal alcançável.
+- HTML: lang=en, title=Vite + React + TS, favicon=/vite.svg, Lorem literal.
+- Imagens visíveis na home: 22; todas com alt vazio no recorte observado.
+- Home Cache-Control agregado: no-store, public.
+- API Cache-Control: public.
+- CORS para origem fictícia: 204 e allow-origin wildcard duplicado.
+- Server: nginx/1.14.1; X-Powered-By: tinyhttp.
+- HSTS, CSP, nosniff, frame protection, Referrer-Policy e Permissions-Policy: ausentes.
+
+CONTROLES POSITIVOS
+- HTTP -> HTTPS: 301.
+- TRACE /employees: 405.
+- Rota inexistente: 404 sem stack trace.
+- Bundle .map esperado: 404.
+- Marcador <b> inerte: exibido como texto, sem elemento HTML.
+
+CAUSAS OBSERVADAS NO BUNDLE
+- Menus/etapas: div/img estáticos sem handlers.
+- Próximo passo: botão sem onClick.
+- Adicionar EPI: span sem handler.
+- Adicionar outra atividade: botão sem type=button dentro do form.
+- ASO: input guarda valor local; POST não inclui arquivo.
+- POST/erro: useEffect envia estado e resolve/rejeita apenas com console.log.
+
+PRIVACIDADE E LIMPEZA
+- Capturas novas usam lista vazia mockada; nenhum registro preexistente aparece.
+- Nenhum valor de CPF/RG/nome preexistente foi salvo.
+- Nenhum ID de terceiro foi mutado ou enumerado.
+- Registros QA Automacao após execução: 0.

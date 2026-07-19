@@ -103,3 +103,7 @@ Outros browsers, dispositivos físicos, carga/stress, pentest invasivo, acessibi
 ### Como explicar uma suíte vermelha?
 
 O código 1 é esperado enquanto o produto descumprir expectativas seguras e funcionais. A explicação precisa separar defeitos reproduzidos de infraestrutura, timeout, seletor quebrado ou erro do teste. Uma suíte verde obtida afrouxando asserções esconderia os riscos documentados.
+
+### O que mudou na auditoria completa de 18/07?
+
+A suíte passou de 49 para 61 testes: 15 aprovados e 46 reprovados. A nova demonstração deve clicar um item lateral, uma etapa superior, concluir e então clicar em `Próximo passo`; nenhum deles muda a tela. Em seguida, mostrar `BUG-019-home-mobile-recortada.png` e explicar que o texto não sofreu corrupção de encoding: é `Lorem ipsum` literal comprimido pelo layout. Na segurança, priorizar CRUD anônimo e cache público; headers e banners são hardening secundário. TRACE 405 e HTML inerte renderizado como texto são resultados positivos.

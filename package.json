@@ -10,6 +10,8 @@
     "test:api": "playwright test tests/api",
     "test:smoke": "playwright test tests/api/employees-get.spec.js tests/web/ui-api-consistency.spec.js",
     "test:deep-audit": "playwright test tests/web/employee-advanced.spec.js tests/api/employees-validation.spec.js tests/api/employees-methods-and-cache.spec.js",
+    "test:shell": "playwright test tests/web/shell-navigation-and-content.spec.js",
+    "test:security": "playwright test tests/api/employees-security.spec.js tests/api/security-hardening.spec.js",
     "test:headed": "playwright test tests/web --headed",
     "test:debug": "playwright test --debug",
     "test:report": "playwright show-report"

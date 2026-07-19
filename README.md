@@ -48,15 +48,19 @@ npm run test:web
 npm run test:api
 npm run test:smoke
 npm run test:deep-audit
+npm run test:shell
+npm run test:security
 npm run test:headed
 npm run test:debug
 npm run test:report
 ```
 
-- `npm test`: os 49 testes, incluindo expectativas de defeitos conhecidos.
+- `npm test`: os 61 testes, incluindo expectativas de defeitos conhecidos.
 - `npm run test:web` / `npm run test:api`: recortes por camada.
 - `npm run test:smoke`: cinco cenários positivos de GET e consistência UI/API.
 - `npm run test:deep-audit`: os três arquivos ampliados; lista 31 testes porque o arquivo de validação contém cinco testes da base e nove novos.
+- `npm run test:shell`: seis cenários de menus, etapas, conteúdo, identidade visual, mobile e saída HTML.
+- `npm run test:security`: nove cenários de autenticação, CORS, headers, cache, banners e TRACE.
 - `npm run test:headed` e `npm run test:debug`: apoio à demonstração e diagnóstico.
 - `npm run test:report`: abre o relatório local depois de uma execução.
 
@@ -149,6 +153,23 @@ Os quatro testes direcionados confirmaram: GET por ID aprovado, UI → API aprov
 
 O registro sanitizado de comandos, códigos de saída, classificação e limpeza desta rodada está em [evidence/logs/final-gap-audit-2026-07-18.txt](evidence/logs/final-gap-audit-2026-07-18.txt).
 
+## Resultado mais recente — auditoria completa da página
+
+Execução ampliada de 18/07/2026:
+
+| Métrica | Valor |
+| --- | ---: |
+| Descobertos/executados | 61/61 |
+| Aprovados | 15 |
+| Reprovados por comportamento documentado | 46 |
+| Falhas API/web | 26/20 |
+| Bloqueados/infraestrutura | 0/0 |
+| Duração | 3,7 min |
+| Registros `QA Automacao` remanescentes | 0 |
+| Bugs documentados | 19 |
+
+Os 12 cenários novos confirmam menus lateral/superior sem ação, nove rótulos `ITEM 1`, placeholder `Lorem ipsum`, identidade humana sem contexto, metadados do Vite, recorte móvel, headers ausentes, cache público, banners e CORS aberto. TRACE 405 e renderização de HTML inerte passaram. O relatório consolidado está em [auditoria completa](docs/full-system-audit-2026-07-18.md) e o log sanitizado em [evidence/logs/full-system-audit-2026-07-18.txt](evidence/logs/full-system-audit-2026-07-18.txt).
+
 ## Estratégia
 
 - Exploração antes da automação.
@@ -194,6 +215,10 @@ Não foram salvos tokens, cookies, credenciais ou respostas completas com valore
 - [Relatório complementar de defeitos](docs/bug-report-deep-audit.md)
 - [Resumo da auditoria profunda](docs/test-summary-deep-audit.md)
 - [Segurança e privacidade — complemento](docs/security-privacy-deep-audit.md)
+- [Auditoria completa da página, API e segurança](docs/full-system-audit-2026-07-18.md)
+- [Defeitos de navegação e shell — BUG-016 a BUG-019](docs/bug-report-shell-navigation.md)
+- [Hardening de segurança — rodada ampliada](docs/security-hardening-2026-07-18.md)
+- [Resumo de 61 testes](docs/test-summary-full-system-2026-07-18.md)
 
 ## Próximo passo recomendado
 

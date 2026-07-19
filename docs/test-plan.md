@@ -134,3 +134,22 @@ Composição incremental: base 23 + web 12 + validações novas de API 9 + méto
 | Limpeza | README/estratégia | `cleanupEmployee` e verificação por prefixo | ID próprio, guarda e `finally`; alvo obrigatório: zero remanescentes |
 | Limites éticos/privacidade | documentos de segurança | evidências sanitizadas, `.gitignore` | sem mutação de terceiros, carga ou respostas completas |
 | Uso de IA | `ai-usage-diary.md` | exemplos de erros/correções | participação ampla e transparente |
+
+## 11. Extensão — auditoria completa do shell e hardening
+
+| ID | Área | Cenário | Resultado | Defeito/controle |
+| --- | --- | --- | --- | --- |
+| WEB-021 | Menu lateral | cinco itens inativos mudam rota/conteúdo/seleção | reprovado | BUG-016 |
+| WEB-022 | Etapas | passos 2 a 9 navegam e têm nomes distintos | reprovado | BUG-016/013 |
+| WEB-023 | Conteúdo | ausência de placeholder e metadados Vite | reprovado | BUG-017 |
+| WEB-024 | Acessibilidade | ícone/silhueta humanos têm contexto | reprovado | BUG-018 |
+| WEB-025 | Responsivo | shell completo em 390 px | reprovado | BUG-019 |
+| WEB-026 | Saída | HTML inerte é codificado como texto | aprovado | controle positivo |
+| API-033 | Headers | HSTS/CSP/nosniff/frame/referrer/permissions | reprovado | SEC-005 |
+| API-034 | Cache home | não mistura `no-store` e `public` | reprovado | hardening |
+| API-035 | Banners | não revela servidor/framework | reprovado | SEC-005 |
+| API-036 | CORS | origem fictícia não recebe permissão | reprovado | SEC-004 |
+| API-037 | Headers/cache API | privacidade e nosniff | reprovado | SEC-005/006 |
+| API-038 | Método | TRACE rejeitado | aprovado: 405 | controle positivo |
+
+Composição atual: **49 cenários anteriores + 12 novos = 61**. Resultado: **15 aprovados e 46 reprovados**, sem falha de infraestrutura e com zero registros QA remanescentes.
