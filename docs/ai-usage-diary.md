@@ -13,6 +13,8 @@ A IA foi usada extensivamente durante uma sessão técnica em 17/07/2026: ajudou
 - Rascunho de documentação, posteriormente confrontado com as execuções.
 - Identificação de trechos relevantes no bundle público para localizar a URL da API e entender o formato `{ state: { employee } }`.
 - Execução de uma segunda rodada profunda com mocks de estados vazio, carregando e erro, lista longa, menus e controles de etapas.
+- Reprodução individual dos menus/etapas no navegador, medição do layout móvel e inspeção mínima do bundle público para relacionar sintomas a handlers ausentes.
+- Geração e revisão visual de três capturas sanitizadas com a lista interceptada como vazia.
 
 ## Sugestões aproveitadas
 
@@ -31,6 +33,7 @@ A IA foi usada extensivamente durante uma sessão técnica em 17/07/2026: ajudou
 4. **Captura visual em branco.** O primeiro mecanismo de screenshot retornou somente o fundo, apesar da árvore acessível estar carregada. A imagem foi considerada inválida e substituída por capturas produzidas pelo Chromium do Playwright.
 5. **Risco de severidade exagerada.** CORS amplo foi analisado como fator agravante, não como vulnerabilidade crítica isolada. Ausência de headers foi mantida como hardening informativo.
 6. **Expectativa inicial sobre controles secundários.** A primeira ideia foi tratar `Adicionar EPI`, `Adicionar outra atividade` e os ícones como funcionalidades disponíveis. A validação no DOM e no fluxo mostrou que alguns são apenas elementos visuais ou submetem o formulário; os achados foram registrados como defeitos somente quando havia uma affordance clara e uma falha observável.
+7. **Texto supostamente corrompido.** A hipótese de encoding foi confrontada com DOM e screenshot. Os acentos da interface aparecem corretamente; o problema real é conteúdo `Lorem ipsum` literal somado a uma coluna estreita em mobile. O relatório evita chamar isso de corrupção de caracteres.
 
 ## Validação manual
 
