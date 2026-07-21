@@ -5,6 +5,25 @@ import {
 } from '../helpers/employeeFactory.js';
 import { cleanupEmployee, createEmployee } from '../helpers/apiHelpers.js';
 
+/**
+ * BUG-002 | API/VALIDAÇÃO SERVER-SIDE
+ * OBJETIVO: Reutiliza o mesmo fluxo para verificar várias classes de payload inválido.
+ * Cada objeto descreve um caso; o loop transforma cada entrada em um teste independente.
+ *
+ * PALAVRAS-CHAVE:
+ * - const: cria uma referência que não será reatribuída.
+ * - array [...]: reúne os cenários inválidos em uma única tabela de dados.
+ * - title: define o nome exibido no relatório do Playwright.
+ * - build: função que monta somente o payload necessário para aquele cenário.
+ * - for...of: percorre cada cenário da tabela.
+ * - test(...): registra um cenário independente no Playwright.
+ * - async/await: espera a requisição terminar antes de validar o resultado.
+ * - request: cliente HTTP direto, sem abrir o navegador.
+ * - expect(...): compara o status real com os códigos esperados.
+ * - try/finally: mantém a limpeza mesmo quando uma expectativa falha.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-002
+ */
 // Casos inválidos reutilizam o mesmo fluxo para manter a cobertura legível e extensível.
 const invalidScenarios = [
   {

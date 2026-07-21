@@ -38,6 +38,21 @@ async function mockEmployeeList(page, records, { status = 200, delayMs = 0 } = {
   });
 }
 
+/**
+ * BUG-009 | WEB/FLUXO
+ * OBJETIVO: Conta os campos antes e depois do clique; deveria surgir mais um conjunto EPI + CA.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-009
+ */
 test('[BUG-009] Adicionar EPI cria um novo conjunto de EPI e CA', async ({ page }) => {
   // Preparação: abre o formulário e registra a quantidade inicial de seletores.
   await openEmployeeForm(page);
@@ -53,6 +68,21 @@ test('[BUG-009] Adicionar EPI cria um novo conjunto de EPI e CA', async ({ page 
   await expect(page.locator('input[name="caNumber"]')).toHaveCount(2);
 });
 
+/**
+ * BUG-008 | WEB/FLUXO
+ * OBJETIVO: Clica no controle secundário e comprova que ele não deveria disparar POST nem fechar o formulário.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-008
+ */
 test('[BUG-008] Adicionar outra atividade não envia nem fecha o cadastro atual', async ({ page, request }) => {
   // Preparação: preenche um cadastro válido e começa a observar possíveis POSTs.
   const data = createEmployeeData();
@@ -86,6 +116,21 @@ test('[BUG-008] Adicionar outra atividade não envia nem fecha o cadastro atual'
   }
 });
 
+/**
+ * BUG-010 | WEB/INTEGRAÇÃO
+ * OBJETIVO: Anexa uma fixture sintética e verifica se o arquivo aparece na requisição enviada.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-010
+ */
 test('[BUG-010] ASO selecionado é incluído na requisição de cadastro', async ({ page, request }) => {
   // Preparação: preenche o cadastro e anexa uma fixture sintética de ASO.
   const data = createEmployeeData();
@@ -113,6 +158,21 @@ test('[BUG-010] ASO selecionado é incluído na requisição de cadastro', async
   }
 });
 
+/**
+ * BUG-011 | WEB/RESILIÊNCIA
+ * OBJETIVO: Simula POST 500 e verifica se o formulário, os dados e uma mensagem de erro permanecem visíveis.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-011
+ */
 test('[BUG-011] erro 500 ao salvar mantém os dados e informa a falha', async ({ page }) => {
   // Preparação: intercepta somente o POST de cadastro e devolve um erro 500 controlado.
   const employee = createEmployeeData().state.employee;
@@ -141,6 +201,21 @@ test('[BUG-011] erro 500 ao salvar mantém os dados e informa a falha', async ({
   await expect(page.getByRole('alert')).toContainText(/erro|falha|tente novamente/i);
 });
 
+/**
+ * BUG-012 | WEB/NAVEGAÇÃO
+ * OBJETIVO: Abre o menu do cartão e espera um menu visível com ao menos uma ação.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-012
+ */
 test('[BUG-012] menu de três pontos oferece ações para o funcionário', async ({ page }) => {
   // Preparação: renderiza um funcionário sintético e aguarda o cartão aparecer.
   const record = syntheticRecord(1);
@@ -157,6 +232,21 @@ test('[BUG-012] menu de três pontos oferece ações para o funcionário', async
   await expect(page.getByRole('menuitem')).not.toHaveCount(0);
 });
 
+/**
+ * BUG-013 | WEB/ACESSIBILIDADE
+ * OBJETIVO: Inspeciona papel, foco e nome acessível dos controles laterais.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-013
+ */
 test('[BUG-013] menus laterais são focáveis, nomeados e expõem semântica interativa', async ({ page }) => {
   // Preparação: abre a página com uma lista controlada e seleciona os ícones laterais.
   await mockEmployeeList(page, []);
@@ -191,6 +281,21 @@ test('[BUG-013] menus laterais são focáveis, nomeados e expõem semântica int
   }
 });
 
+/**
+ * BUG-013 | WEB/ACESSIBILIDADE
+ * OBJETIVO: Verifica nomes únicos e semântica interativa das etapas superiores.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-013
+ */
 test('[BUG-013] etapas superiores têm nomes distintos e controles acessíveis', async ({ page }) => {
   // Preparação: abre a página e localiza as nove etapas superiores.
   await mockEmployeeList(page, []);
@@ -216,6 +321,21 @@ test('[BUG-013] etapas superiores têm nomes distintos e controles acessíveis',
   }
 });
 
+/**
+ * BUG-014 | WEB/ESTADOS DE TELA
+ * OBJETIVO: Simula lista vazia e espera mensagem explícita para o usuário.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-014
+ */
 test('[BUG-014] lista vazia comunica que não há funcionários', async ({ page }) => {
   // Preparação: simula uma resposta válida com lista vazia.
   await mockEmployeeList(page, []);
@@ -226,6 +346,21 @@ test('[BUG-014] lista vazia comunica que não há funcionários', async ({ page 
   await expect(page.getByText(/nenhum funcionário|nenhum registro|lista vazia/i)).toBeVisible();
 });
 
+/**
+ * BUG-014 | WEB/ESTADOS DE TELA
+ * OBJETIVO: Atrasa a resposta controladamente e espera um status de carregamento.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-014
+ */
 test('[BUG-014] carregamento da lista apresenta feedback de progresso', async ({ page }) => {
   // Preparação: atrasa a resposta da lista para manter o estado de carregamento observável.
   await mockEmployeeList(page, [], { delayMs: 2_000 });
@@ -238,6 +373,21 @@ test('[BUG-014] carregamento da lista apresenta feedback de progresso', async ({
   await expect(feedback).toBeVisible({ timeout: 500 });
 });
 
+/**
+ * BUG-014 | WEB/ESTADOS DE TELA
+ * OBJETIVO: Simula GET 500 e espera alerta de erro recuperável.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-014
+ */
 test('[BUG-014] falha ao carregar a lista apresenta mensagem de erro', async ({ page }) => {
   // Preparação: simula uma falha HTTP 500 na consulta da lista.
   await mockEmployeeList(page, [], { status: 500 });
@@ -248,6 +398,21 @@ test('[BUG-014] falha ao carregar a lista apresenta mensagem de erro', async ({ 
   await expect(page.getByRole('alert')).toContainText(/erro|falha|tente novamente/i);
 });
 
+/**
+ * BUG-015 | WEB/LAYOUT
+ * OBJETIVO: Simula 15 cartões e mede se o último está visível ou se existe rolagem.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-015
+ */
 test('[BUG-015] lista longa permite alcançar o último funcionário', async ({ page }) => {
   // Preparação: simula quinze registros para reproduzir uma listagem longa.
   const records = Array.from({ length: 15 }, (_, index) => syntheticRecord(index + 1));
@@ -281,6 +446,11 @@ test('[BUG-015] lista longa permite alcançar o último funcionário', async ({ 
   expect(layout.lastInside || layout.scrollable).toBe(true);
 });
 
+/**
+ * CONTROLE-DUPLO-CLIQUE | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
 test('[CONTROLE-DUPLO-CLIQUE] duplo clique em Salvar cria apenas um registro', async ({ page, request }) => {
   const employee = createEmployeeData().state.employee;
   const created = [];

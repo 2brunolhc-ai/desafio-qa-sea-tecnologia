@@ -7,6 +7,21 @@ import {
   getEmployeeById,
 } from '../helpers/apiHelpers.js';
 
+/**
+ * BUG-021 | API/INTEGRIDADE
+ * OBJETIVO: Altera somente role e depois confirma que nome, CPF e RG não foram apagados.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-021
+ */
 test('[BUG-021] PATCH parcial preserva os demais campos do funcionário', async ({ request }) => {
   // Preparação: cria um registro completo e guarda o objeto original para comparação.
   const data = createEmployeeData();
@@ -37,6 +52,11 @@ test('[BUG-021] PATCH parcial preserva os demais campos do funcionário', async 
   }
 });
 
+/**
+ * RISCO-CONCORRENCIA | RISCO/INTEGRIDADE
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
 test('[RISCO-CONCORRENCIA] atualização concorrente com validador obsoleto é rejeitada', async ({ request }) => {
   const data = createEmployeeData();
   let created;
@@ -80,6 +100,21 @@ test('[RISCO-CONCORRENCIA] atualização concorrente com validador obsoleto é r
   }
 });
 
+/**
+ * BUG-022 | API/INTEGRIDADE
+ * OBJETIVO: Envia um id criado pelo cliente e espera 400 ou 422.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-022
+ */
 test('[BUG-022] API rejeita identificador definido pelo cliente', async ({ request }) => {
   // Preparação: monta um payload sintético contendo um ID escolhido pelo cliente.
   const marker = `${TEST_DATA_PREFIX} ClientId ${Date.now()}`;

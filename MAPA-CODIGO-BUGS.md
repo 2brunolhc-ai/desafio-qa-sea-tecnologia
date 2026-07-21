@@ -13,6 +13,10 @@ npm run test:bug -- BUG-020
 
 No relatório do Playwright, o mesmo identificador aparece no nome do cenário.
 
+Nos arquivos de teste, cada cenário mantém comentários técnicos curtos sobre objetivo, palavras-chave do Playwright e comando de execução. As marcações de preparação, ação, observação, expectativa e limpeza aparecem somente junto ao trecho correspondente.
+
+A implementação do comando `npm run test:bug` está comentada em `scripts/run-bug.js`. Ela normaliza o ID e usa o filtro `-g` do Playwright para executar os cenários correspondentes.
+
 | Bug | Comando | Arquivo(s) |
 | --- | --- | --- |
 | BUG-001 | `npm run test:bug -- BUG-001` | `tests/api/employees-methods-and-cache.spec.js`<br>`tests/api/employees-security.spec.js` |

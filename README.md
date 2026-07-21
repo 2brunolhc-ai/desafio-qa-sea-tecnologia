@@ -17,6 +17,21 @@ npm run test:bug -- BUG-020
 
 Cada teste relacionado a bug recebeu um bloco de comentários com objetivo, preparação, ação, observação, expectativa, limpeza e explicação das palavras principais do Playwright. O mapa completo está em [`MAPA-CODIGO-BUGS.md`](MAPA-CODIGO-BUGS.md).
 
+
+### Como funciona o comando por bug
+
+O script `scripts/run-bug.js` recebe o identificador informado depois de `--`, normaliza valores como `20` ou `BUG-020` para `BUG-020` e inicia o Playwright com o filtro `-g`. Como o mesmo identificador aparece no título dos cenários, todos os testes relacionados ao defeito são encontrados sem depender do nome do arquivo.
+
+Exemplos equivalentes:
+
+```bash
+npm run test:bug -- 20
+npm run test:bug -- BUG-020
+npx playwright test -g "BUG-020" --workers=1
+```
+
+O uso de `--workers=1` permanece intencional: os testes criam e alteram dados em um ambiente compartilhado, então a execução sequencial reduz colisões.
+
 ## Resultado consolidado
 
 Execução registrada em **18/07/2026**, no Chromium:
@@ -126,7 +141,7 @@ npx playwright test tests/api/employees-validation.spec.js \
 
 ## Rastreabilidade dos cenários
 
-Os títulos dos testes usam identificadores como `[BUG-020]`. O comando `npm run test:bug -- BUG-020` executa todos os cenários associados ao defeito, e `MAPA-CODIGO-BUGS.md` aponta os arquivos correspondentes. Comentários curtos marcam preparação, ação, resultado esperado e limpeza somente quando ajudam a entender decisões não óbvias.
+Os títulos dos testes usam identificadores como `[BUG-020]`. O comando `npm run test:bug -- BUG-020` executa todos os cenários associados ao defeito, e `MAPA-CODIGO-BUGS.md` aponta os arquivos correspondentes. Comentários técnicos identificam o objetivo, as palavras-chave do Playwright, o comando de execução e as etapas de preparação, ação, observação, expectativa e limpeza junto ao trecho correspondente.
 
 ## Estrutura do repositório
 

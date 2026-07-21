@@ -6,6 +6,21 @@ import {
   createEmployee,
 } from '../helpers/apiHelpers.js';
 
+/**
+ * BUG-001 | API/SEGURANÇA
+ * OBJETIVO: Tenta criar um trabalhador sem token e espera 401 ou 403.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-001
+ */
 test('[BUG-001] POST de trabalhador exige autenticação', async ({ request }) => {
   // Preparação: reserva a referência do registro caso a API aceite a criação indevidamente.
   let created;
@@ -22,6 +37,21 @@ test('[BUG-001] POST de trabalhador exige autenticação', async ({ request }) =
   }
 });
 
+/**
+ * BUG-001 | API/SEGURANÇA
+ * OBJETIVO: Cria um registro QA e tenta substituí-lo sem token; a API deveria bloquear.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-001
+ */
 test('[BUG-001] PUT de trabalhador exige autenticação ou autorização', async ({ request }) => {
   // Preparação: cria um registro sintético controlado para testar a substituição completa.
   let created;
@@ -49,6 +79,21 @@ test('[BUG-001] PUT de trabalhador exige autenticação ou autorização', async
   }
 });
 
+/**
+ * BUG-001 | API/SEGURANÇA
+ * OBJETIVO: Cria um registro QA e tenta excluí-lo sem token; a API deveria bloquear.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-001
+ */
 test('[BUG-001] DELETE de trabalhador exige autenticação ou autorização', async ({ request }) => {
   // Preparação: cria somente um registro sintético pertencente à suíte.
   let created;
@@ -72,6 +117,21 @@ test('[BUG-001] DELETE de trabalhador exige autenticação ou autorização', as
   }
 });
 
+/**
+ * BUG-001 | API/SEGURANÇA
+ * OBJETIVO: Consulta um registro QA por ID sem token e espera bloqueio.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-001
+ */
 test('[BUG-001] GET por identificador exige autenticação', async ({ request }) => {
   // Preparação: cria um registro sintético para consultar um ID conhecido.
   let created;
@@ -90,6 +150,11 @@ test('[BUG-001] GET por identificador exige autenticação', async ({ request })
   }
 });
 
+/**
+ * RISCO-CACHE-DADOS | SEGURANÇA
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
 test('[RISCO-CACHE-DADOS] respostas com dados pessoais não são cacheáveis publicamente', async ({ request }) => {
   const response = await request.get(EMPLOYEES_URL);
   expect(response.status()).toBe(200);

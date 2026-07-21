@@ -7,6 +7,21 @@ import {
   submitAndCaptureEmployee,
 } from '../helpers/webHelpers.js';
 
+/**
+ * BUG-007 | WEB/ATUALIZAÇÃO DA LISTA
+ * OBJETIVO: Controle do comportamento após reload; ajuda a isolar o relato intermitente de atualização imediata.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-007
+ */
 test('[BUG-007] cadastro completo aparece na listagem após recarregar', async ({ page, request }) => {
   // Preparação: gera dados únicos, abre o formulário e preenche o cadastro completo.
   const data = createEmployeeData();
@@ -31,6 +46,21 @@ test('[BUG-007] cadastro completo aparece na listagem após recarregar', async (
   }
 });
 
+/**
+ * BUG-005 | WEB/INTEGRIDADE
+ * OBJETIVO: Salva sem tocar nos selects e compara os defaults visíveis com o objeto persistido.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-005
+ */
 test('[BUG-005] valores padrão visíveis dos seletores são persistidos sem interação', async ({ page, request }) => {
   // Preparação: monta dados iguais aos valores exibidos por padrão e evita interagir com os seletores.
   const data = createEmployeeData({

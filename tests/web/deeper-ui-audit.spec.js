@@ -39,6 +39,11 @@ async function optionalPostAfter(page, action) {
   return responsePromise;
 }
 
+/**
+ * CONTROLE-FOCO | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
 test('[CONTROLE-FOCO] primeiro controle alcançado por Tab possui indicador de foco visível', async ({ page }) => {
   await mockEmployeeList(page, []);
   await page.goto('/');
@@ -62,6 +67,21 @@ test('[CONTROLE-FOCO] primeiro controle alcançado por Tab possui indicador de f
   expect(focus.visibleIndicator, `controle focado: ${focus.text || focus.tag}`).toBe(true);
 });
 
+/**
+ * BUG-025 | WEB/ACESSIBILIDADE
+ * OBJETIVO: Calcula a relação de contraste e compara com 4,5:1.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-025
+ */
 test('[BUG-025] textos normais e CTAs atingem contraste WCAG AA', async ({ page }) => {
   // Preparação: abre a página com conteúdo controlado e seleciona textos e CTAs representativos.
   await mockEmployeeList(page, []);
@@ -112,6 +132,21 @@ test('[BUG-025] textos normais e CTAs atingem contraste WCAG AA', async ({ page 
   expect(failures, 'texto normal precisa de contraste mínimo 4.5:1').toEqual([]);
 });
 
+/**
+ * BUG-025 | WEB/ACESSIBILIDADE
+ * OBJETIVO: Conta h1, nav e aside para validar a estrutura semântica da página.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-025
+ */
 test('[BUG-025] shell possui título principal e landmarks de navegação', async ({ page }) => {
   // Preparação: abre a página no estado inicial.
   await mockEmployeeList(page, []);
@@ -124,6 +159,21 @@ test('[BUG-025] shell possui título principal e landmarks de navegação', asyn
   expect(await page.locator('aside').count()).toBeGreaterThan(0);
 });
 
+/**
+ * BUG-026 | WEB/ACESSIBILIDADE
+ * OBJETIVO: Inspeciona nome acessível e type do botão de voltar.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-026
+ */
 test('[BUG-026] botão de voltar do formulário tem nome e não é submit', async ({ page }) => {
   // Preparação: abre o formulário e localiza o botão de voltar pelo ícone.
   await mockEmployeeList(page, []);
@@ -147,6 +197,21 @@ test('[BUG-026] botão de voltar do formulário tem nome e não é submit', asyn
   expect(semantics.type).toBe('button');
 });
 
+/**
+ * BUG-026 | WEB/COMPORTAMENTO
+ * OBJETIVO: Preenche um cadastro e comprova que voltar não dispara POST.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-026
+ */
 test('[BUG-026] voltar não submete um cadastro válido', async ({ page, request }) => {
   // Preparação: preenche um cadastro válido e começa a observar possíveis POSTs.
   const employee = createEmployeeData().state.employee;
@@ -169,6 +234,21 @@ test('[BUG-026] voltar não submete um cadastro válido', async ({ page, request
   }
 });
 
+/**
+ * BUG-023 | WEB/VALIDAÇÃO
+ * OBJETIVO: Preenche CPF alfabético e verifica que nenhum POST seja enviado.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-023
+ */
 test('[BUG-023] interface rejeita CPF com letras antes do POST', async ({ page, request }) => {
   // Preparação: preenche o formulário com um CPF alfabético e começa a observar a rede.
   const employee = createEmployeeData({ cpf: 'ABCDEFGHIJK' }).state.employee;
@@ -193,6 +273,21 @@ test('[BUG-023] interface rejeita CPF com letras antes do POST', async ({ page, 
   }
 });
 
+/**
+ * BUG-023 | WEB/VALIDAÇÃO
+ * OBJETIVO: Preenche data futura e verifica que nenhum POST seja enviado.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-023
+ */
 test('[BUG-023] interface rejeita data de nascimento futura antes do POST', async ({ page, request }) => {
   // Preparação: preenche o formulário com uma data futura e começa a observar a rede.
   const employee = createEmployeeData({ birthDay: '2099-01-01' }).state.employee;
@@ -217,6 +312,21 @@ test('[BUG-023] interface rejeita data de nascimento futura antes do POST', asyn
   }
 });
 
+/**
+ * BUG-020 | WEB → API/INTEGRIDADE
+ * OBJETIVO: Salva um trabalhador com EPI e confere o valor persistido de usesEpi.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-020
+ */
 test('[BUG-020] campo usesEpi é verdadeiro quando EPI foi informado', async ({ page, request }) => {
   // Preparação: gera um trabalhador com EPI e preenche o formulário.
   const employee = createEmployeeData({ usesEpi: true }).state.employee;
@@ -238,6 +348,21 @@ test('[BUG-020] campo usesEpi é verdadeiro quando EPI foi informado', async ({ 
   }
 });
 
+/**
+ * BUG-020 | WEB → API/INTEGRIDADE
+ * OBJETIVO: Marca “não usa EPI”, salva e confere o valor persistido de usesEpi.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-020
+ */
 test('[BUG-020] campo usesEpi é falso quando trabalhador não usa EPI', async ({ page, request }) => {
   // Preparação: marca a opção de não uso de EPI e preenche somente os campos aplicáveis.
   const employee = createEmployeeData({
@@ -273,6 +398,11 @@ test('[BUG-020] campo usesEpi é falso quando trabalhador não usa EPI', async (
   }
 });
 
+/**
+ * CONTROLE-FILTRO | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
 test('[CONTROLE-FILTRO] filtro de ativos oculta inativo e Limpar filtros restaura ambos', async ({ page }) => {
   const active = syntheticRecord(1, { isActive: true });
   const inactive = syntheticRecord(2, { isActive: false });
@@ -293,6 +423,21 @@ test('[CONTROLE-FILTRO] filtro de ativos oculta inativo e Limpar filtros restaur
   await expect(inactiveName).toBeVisible();
 });
 
+/**
+ * BUG-024 | WEB/PRIVACIDADE
+ * OBJETIVO: Renderiza registro sintético e exige que o CPF completo não apareça na lista.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-024
+ */
 test('[BUG-024] lista não expõe CPF completo sem necessidade', async ({ page }) => {
   // Preparação: renderiza um registro sintético com CPF conhecido.
   const record = syntheticRecord(3, { cpf: '00000000000' });
@@ -309,6 +454,21 @@ test('[BUG-024] lista não expõe CPF completo sem necessidade', async ({ page }
   await expect(page.getByText('000.000.000-00', { exact: true })).toHaveCount(0);
 });
 
+/**
+ * BUG-028 | WEB/RESILIÊNCIA
+ * OBJETIVO: Simula JSON inválido e espera alerta e botão de tentar novamente.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-028
+ */
 test('[BUG-028] JSON malformado da API produz erro visível e recuperável', async ({ page }) => {
   // Preparação: simula uma resposta com JSON inválido.
   await mockEmployeeList(page, [], { malformed: true });
@@ -321,6 +481,21 @@ test('[BUG-028] JSON malformado da API produz erro visível e recuperável', asy
   expect(await page.getByRole('button', { name: /tentar novamente/i }).count()).toBe(1);
 });
 
+/**
+ * BUG-027 | WEB/ASSETS
+ * OBJETIVO: Lê as URLs declaradas e chama cada asset esperando status abaixo de 400.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-027
+ */
 test('[BUG-027] fontes e favicon declarados carregam sem erro HTTP', async ({ page, request }) => {
   // Preparação: abre a página e coleta as URLs declaradas para fonte e favicon.
   await mockEmployeeList(page, []);
@@ -341,6 +516,21 @@ test('[BUG-027] fontes e favicon declarados carregam sem erro HTTP', async ({ pa
   expect(iconResponse.status(), `favicon: ${iconHref}`).toBeLessThan(400);
 });
 
+/**
+ * BUG-026 | WEB/ACESSIBILIDADE
+ * OBJETIVO: Procura radiogroup, fieldset e legend para os grupos do formulário.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-026
+ */
 test('[BUG-026] grupos de sexo e EPI expõem semântica programática', async ({ page }) => {
   // Preparação: abre o formulário com a lista controlada.
   await mockEmployeeList(page, []);

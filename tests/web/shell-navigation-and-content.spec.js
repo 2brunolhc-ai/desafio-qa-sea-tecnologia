@@ -38,6 +38,21 @@ async function shellState(page) {
   }));
 }
 
+/**
+ * BUG-016 | WEB/NAVEGAÇÃO
+ * OBJETIVO: Clica em cada item lateral e compara o estado antes e depois.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-016
+ */
 test('[BUG-016] itens inativos do menu lateral executam uma ação observável', async ({ page }) => {
   // Preparação: abre a página com estado controlado e define os itens laterais avaliados.
   await mockEmptyEmployeeList(page);
@@ -71,6 +86,21 @@ test('[BUG-016] itens inativos do menu lateral executam uma ação observável',
   expect(unchanged, 'cada item inativo deve navegar, abrir conteúdo ou indicar seleção').toEqual([]);
 });
 
+/**
+ * BUG-016 | WEB/NAVEGAÇÃO
+ * OBJETIVO: Clica nas etapas 2 a 9 e exige mudança de rota, conteúdo ou seleção.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-016
+ */
 test('[BUG-016] etapas superiores têm nomes próprios e permitem navegação', async ({ page }) => {
   // Preparação: abre a página e coleta as nove etapas e seus rótulos.
   await mockEmptyEmployeeList(page);
@@ -94,6 +124,21 @@ test('[BUG-016] etapas superiores têm nomes próprios e permitem navegação', 
   expect(unchanged, 'etapas 2 a 9 devem mudar rota, conteúdo ou estado selecionado').toEqual([]);
 });
 
+/**
+ * BUG-017 | WEB/CONTEÚDO
+ * OBJETIVO: Procura Lorem ipsum, título Vite/React, idioma incorreto e favicon de template.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-017
+ */
 test('[BUG-017] página inicial não publica conteúdo nem metadados de template', async ({ page }) => {
   // Preparação: abre a página inicial com a lista vazia controlada.
   await mockEmptyEmployeeList(page);
@@ -112,6 +157,21 @@ test('[BUG-017] página inicial não publica conteúdo nem metadados de template
   expect.soft(await page.locator('link[rel="icon"]').getAttribute('href')).not.toContain('vite');
 });
 
+/**
+ * BUG-018 | WEB/ACESSIBILIDADE
+ * OBJETIVO: Verifica se ícones humanos têm ação/nome ou marcação decorativa.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-018
+ */
 test('[BUG-018] ícones humanos têm contexto de usuário ou são marcados como decorativos', async ({ page }) => {
   // Preparação: abre a página e localiza o ícone de pessoa e a ilustração humana.
   await mockEmptyEmployeeList(page);
@@ -149,6 +209,21 @@ test('[BUG-018] ícones humanos têm contexto de usuário ou são marcados como 
   ).toBe(true);
 });
 
+/**
+ * BUG-019 | WEB/RESPONSIVIDADE
+ * OBJETIVO: Mede recorte horizontal e sobreposição entre ilustração e texto no mobile.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-019
+ */
 test('[BUG-019] etapas e conteúdo principal permanecem alcançáveis em 390 px', async ({ page }) => {
   // Preparação: define a viewport móvel e abre a página com dados controlados.
   await page.setViewportSize({ width: 390, height: 844 });
@@ -208,6 +283,11 @@ test('[BUG-019] etapas e conteúdo principal permanecem alcançáveis em 390 px'
   ).toBe(true);
 });
 
+/**
+ * CONTROLE-SAIDA-HTML | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
 test('[CONTROLE-SAIDA-HTML] nome com marcação HTML inerte é exibido como texto, sem criar elemento', async ({ page, request }) => {
   const marker = `QA Automacao <b>INERTE-${Date.now()}</b>`;
   const data = createEmployeeData({ name: marker });

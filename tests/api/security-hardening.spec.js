@@ -62,6 +62,11 @@ test('[HARDENING-HEADERS-API] API aplica headers de conteúdo e privacidade nas 
   expect(headers['cache-control'] || '').not.toMatch(/public/i);
 });
 
+/**
+ * CONTROLE-TRACE | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
 test('[CONTROLE-TRACE] servidor rejeita o método TRACE', async ({ request }) => {
   const response = await request.fetch(EMPLOYEES_URL, { method: 'TRACE' });
   expect([405, 501]).toContain(response.status());
