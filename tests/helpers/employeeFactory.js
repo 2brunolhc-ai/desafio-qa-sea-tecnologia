@@ -1,3 +1,5 @@
+// Centraliza a criação de dados sintéticos e únicos usados pela suíte.
+// O prefixo QA Automacao também protege a rotina de limpeza contra exclusões indevidas.
 export const TEST_DATA_PREFIX = 'QA Automacao';
 
 function uniqueSuffix() {

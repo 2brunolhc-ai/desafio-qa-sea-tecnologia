@@ -4,6 +4,34 @@ Avaliação exploratória, automação e documentação da aplicação de cadast
 
 O projeto cobre a interface web, a API REST `/employees`, a consistência entre as duas camadas e riscos de segurança, privacidade e integridade. Todos os testes usam dados sintéticos e a limpeza exclui somente registros criados pela própria automação.
 
+
+## Rastreabilidade no próprio código
+
+Os cenários ligados aos 28 defeitos agora começam com identificadores como `[BUG-001]` e `[BUG-020]` no título do teste. Isso permite localizar rapidamente no VS Code com `Ctrl+Shift+F` e também filtrar a execução pelo ID.
+
+```bash
+npm run list:tests
+npm run test:bug -- BUG-001
+npm run test:bug -- BUG-020
+```
+
+Cada teste relacionado a bug recebeu um bloco de comentários com objetivo, preparação, ação, observação, expectativa, limpeza e explicação das palavras principais do Playwright. O mapa completo está em [`MAPA-CODIGO-BUGS.md`](MAPA-CODIGO-BUGS.md).
+
+
+### Como funciona o comando por bug
+
+O script `scripts/run-bug.js` recebe o identificador informado depois de `--`, normaliza valores como `20` ou `BUG-020` para `BUG-020` e inicia o Playwright com o filtro `-g`. Como o mesmo identificador aparece no título dos cenários, todos os testes relacionados ao defeito são encontrados sem depender do nome do arquivo.
+
+Exemplos equivalentes:
+
+```bash
+npm run test:bug -- 20
+npm run test:bug -- BUG-020
+npx playwright test -g "BUG-020" --workers=1
+```
+
+O uso de `--workers=1` permanece intencional: os testes criam e alteram dados em um ambiente compartilhado, então a execução sequencial reduz colisões.
+
 ## Resultado consolidado
 
 Execução registrada em **18/07/2026**, no Chromium:
@@ -110,6 +138,10 @@ Validação negativa da API:
 npx playwright test tests/api/employees-validation.spec.js \
   -g "rejeita nome nulo" --reporter=line --workers=1
 ```
+
+## Rastreabilidade dos cenários
+
+Os títulos dos testes usam identificadores como `[BUG-020]`. O comando `npm run test:bug -- BUG-020` executa todos os cenários associados ao defeito, e `MAPA-CODIGO-BUGS.md` aponta os arquivos correspondentes. Comentários técnicos identificam o objetivo, as palavras-chave do Playwright, o comando de execução e as etapas de preparação, ação, observação, expectativa e limpeza junto ao trecho correspondente.
 
 ## Estrutura do repositório
 

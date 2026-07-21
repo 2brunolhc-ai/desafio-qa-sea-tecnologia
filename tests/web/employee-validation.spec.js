@@ -2,7 +2,12 @@ import { test, expect } from '@playwright/test';
 import { createEmployeeData } from '../helpers/employeeFactory.js';
 import { openEmployeeForm } from '../helpers/webHelpers.js';
 
-test('envio vazio permanece no formulário e aponta o primeiro obrigatório', async ({ page }) => {
+/**
+ * CONTROLE-VALIDACAO-VAZIO | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[CONTROLE-VALIDACAO-VAZIO] envio vazio permanece no formulário e aponta o primeiro obrigatório', async ({ page }) => {
   await openEmployeeForm(page);
   await page.getByRole('button', { name: 'Salvar' }).click();
 
@@ -12,7 +17,12 @@ test('envio vazio permanece no formulário e aponta o primeiro obrigatório', as
   await expect(page.getByRole('heading', { name: 'Adicionar Funcionário' })).toBeVisible();
 });
 
-test('CPF com menos de 11 caracteres é bloqueado pelo navegador', async ({ page }) => {
+/**
+ * CONTROLE-VALIDACAO-CPF-CURTO | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[CONTROLE-VALIDACAO-CPF-CURTO] CPF com menos de 11 caracteres é bloqueado pelo navegador', async ({ page }) => {
   const employee = createEmployeeData().state.employee;
   await openEmployeeForm(page);
 
@@ -29,11 +39,29 @@ test('CPF com menos de 11 caracteres é bloqueado pelo navegador', async ({ page
   await expect(page.getByRole('heading', { name: 'Adicionar Funcionário' })).toBeVisible();
 });
 
-test('rótulos identificam programaticamente seus campos', async ({ page }) => {
+/**
+ * BUG-006 | WEB/ACESSIBILIDADE
+ * OBJETIVO: Procura os inputs pelo texto do rótulo; se não houver associação programática, a asserção falha.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-006
+ */
+test('[BUG-006] rótulos identificam programaticamente seus campos', async ({ page }) => {
+  // Preparação: abre o formulário no estado inicial.
   await openEmployeeForm(page);
 
+  // Ação: localiza os campos pelos nomes acessíveis dos rótulos.
   await expect(page.getByLabel('Nome', { exact: true })).toHaveCount(1);
   await expect(page.getByLabel('CPF', { exact: true })).toHaveCount(1);
   await expect(page.getByLabel('Data de nascimento', { exact: true })).toHaveCount(1);
+  // Observação e expectativa: cada rótulo deve apontar para exatamente um campo.
   await expect(page.getByLabel('RG', { exact: true })).toHaveCount(1);
 });

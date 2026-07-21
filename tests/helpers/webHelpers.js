@@ -1,3 +1,4 @@
+// Ações reutilizáveis do formulário, mantidas fora dos cenários para reduzir duplicação.
 import { expect } from '@playwright/test';
 
 export async function openEmployeeForm(page) {

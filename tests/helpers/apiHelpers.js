@@ -1,3 +1,5 @@
+// Operações comuns da API e limpeza defensiva dos registros criados pelos testes.
+// Diagnósticos são sanitizados para não expor documentos pessoais em logs.
 import { expect } from '@playwright/test';
 import { TEST_DATA_PREFIX } from './employeeFactory.js';
 

@@ -1,3 +1,4 @@
+// Execução sequencial e sem retries para reduzir colisões e repetição de mutações.
 import { existsSync } from 'node:fs';
 import process from 'node:process';
 import { defineConfig, devices } from '@playwright/test';
