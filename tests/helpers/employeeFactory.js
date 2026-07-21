@@ -1,3 +1,9 @@
+/**
+ * FACTORY DE DADOS SINTÉTICOS
+ * Responsabilidade: criar payloads únicos e seguros para os testes.
+ * Em entrevista: explique que Date.now + valor aleatório evitam colisões e que o prefixo QA Automacao
+ * permite reconhecer e limpar somente os registros criados pela suíte.
+ */
 export const TEST_DATA_PREFIX = 'QA Automacao';
 
 function uniqueSuffix() {

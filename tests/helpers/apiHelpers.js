@@ -1,3 +1,8 @@
+/**
+ * HELPERS DE API E LIMPEZA SEGURA
+ * Responsabilidade: centralizar POST, GET por ID, sanitização de diagnóstico e DELETE defensivo.
+ * Em entrevista: destaque que cleanupEmployee exige ID e marcador QA Automacao antes de excluir.
+ */
 import { expect } from '@playwright/test';
 import { TEST_DATA_PREFIX } from './employeeFactory.js';
 

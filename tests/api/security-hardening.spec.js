@@ -1,7 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { API_BASE_URL, EMPLOYEES_URL } from '../helpers/apiHelpers.js';
 
-test('página aplica headers essenciais de proteção no navegador', async ({ request }) => {
+/**
+ * HARDENING-HEADERS-WEB | SEGURANÇA
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[HARDENING-HEADERS-WEB] página aplica headers essenciais de proteção no navegador', async ({ request }) => {
   const response = await request.get(`${API_BASE_URL}/`);
   const headers = response.headers();
   const csp = headers['content-security-policy'] || '';
@@ -18,7 +23,12 @@ test('página aplica headers essenciais de proteção no navegador', async ({ re
   expect.soft(headers['permissions-policy'] || '').not.toBe('');
 });
 
-test('página não combina cache público com diretiva no-store', async ({ request }) => {
+/**
+ * HARDENING-CACHE-WEB | SEGURANÇA
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[HARDENING-CACHE-WEB] página não combina cache público com diretiva no-store', async ({ request }) => {
   const response = await request.get(`${API_BASE_URL}/`);
   const cacheControl = response.headers()['cache-control'] || '';
 
@@ -26,7 +36,12 @@ test('página não combina cache público com diretiva no-store', async ({ reque
   expect(cacheControl).not.toMatch(/public/i);
 });
 
-test('API não revela produtos e versões de infraestrutura', async ({ request }) => {
+/**
+ * HARDENING-BANNER | SEGURANÇA
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[HARDENING-BANNER] API não revela produtos e versões de infraestrutura', async ({ request }) => {
   const response = await request.get(`${EMPLOYEES_URL}/qa-id-inexistente-20260718`);
   const headers = response.headers();
 
@@ -35,7 +50,12 @@ test('API não revela produtos e versões de infraestrutura', async ({ request }
   expect.soft(headers['x-powered-by']).toBeUndefined();
 });
 
-test('API restringe CORS para origem não confiável', async ({ request }) => {
+/**
+ * HARDENING-CORS | SEGURANÇA
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[HARDENING-CORS] API restringe CORS para origem não confiável', async ({ request }) => {
   const untrustedOrigin = 'https://origem-ficticia.invalid';
   const response = await request.fetch(EMPLOYEES_URL, {
     method: 'OPTIONS',
@@ -51,7 +71,12 @@ test('API restringe CORS para origem não confiável', async ({ request }) => {
   expect([undefined, 'null']).toContain(allowOrigin);
 });
 
-test('API aplica headers de conteúdo e privacidade nas respostas', async ({ request }) => {
+/**
+ * HARDENING-HEADERS-API | SEGURANÇA
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[HARDENING-HEADERS-API] API aplica headers de conteúdo e privacidade nas respostas', async ({ request }) => {
   const response = await request.get(EMPLOYEES_URL);
   const headers = response.headers();
 
@@ -62,7 +87,12 @@ test('API aplica headers de conteúdo e privacidade nas respostas', async ({ req
   expect(headers['cache-control'] || '').not.toMatch(/public/i);
 });
 
-test('servidor rejeita o método TRACE', async ({ request }) => {
+/**
+ * CONTROLE-TRACE | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[CONTROLE-TRACE] servidor rejeita o método TRACE', async ({ request }) => {
   const response = await request.fetch(EMPLOYEES_URL, { method: 'TRACE' });
   expect([405, 501]).toContain(response.status());
 });

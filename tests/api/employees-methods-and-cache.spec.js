@@ -6,7 +6,29 @@ import {
   createEmployee,
 } from '../helpers/apiHelpers.js';
 
-test('POST de trabalhador exige autenticação', async ({ request }) => {
+/**
+ * BUG-001 | API/SEGURANÇA
+ * OBJETIVO: Tenta criar um trabalhador sem token e espera 401 ou 403.
+ *
+ * COMO LER ESTE TESTE NA ENTREVISTA:
+ * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
+ * 2. AÇÃO: executa a operação real no navegador ou na API.
+ * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
+ * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
+ * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-001
+ */
+test('[BUG-001] POST de trabalhador exige autenticação', async ({ request }) => {
   let created;
 
   try {
@@ -18,7 +40,29 @@ test('POST de trabalhador exige autenticação', async ({ request }) => {
   }
 });
 
-test('PUT de trabalhador exige autenticação ou autorização', async ({ request }) => {
+/**
+ * BUG-001 | API/SEGURANÇA
+ * OBJETIVO: Cria um registro QA e tenta substituí-lo sem token; a API deveria bloquear.
+ *
+ * COMO LER ESTE TESTE NA ENTREVISTA:
+ * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
+ * 2. AÇÃO: executa a operação real no navegador ou na API.
+ * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
+ * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
+ * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-001
+ */
+test('[BUG-001] PUT de trabalhador exige autenticação ou autorização', async ({ request }) => {
   let created;
 
   try {
@@ -41,7 +85,29 @@ test('PUT de trabalhador exige autenticação ou autorização', async ({ reques
   }
 });
 
-test('DELETE de trabalhador exige autenticação ou autorização', async ({ request }) => {
+/**
+ * BUG-001 | API/SEGURANÇA
+ * OBJETIVO: Cria um registro QA e tenta excluí-lo sem token; a API deveria bloquear.
+ *
+ * COMO LER ESTE TESTE NA ENTREVISTA:
+ * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
+ * 2. AÇÃO: executa a operação real no navegador ou na API.
+ * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
+ * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
+ * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-001
+ */
+test('[BUG-001] DELETE de trabalhador exige autenticação ou autorização', async ({ request }) => {
   let created;
 
   try {
@@ -60,7 +126,29 @@ test('DELETE de trabalhador exige autenticação ou autorização', async ({ req
   }
 });
 
-test('GET por identificador exige autenticação', async ({ request }) => {
+/**
+ * BUG-001 | API/SEGURANÇA
+ * OBJETIVO: Consulta um registro QA por ID sem token e espera bloqueio.
+ *
+ * COMO LER ESTE TESTE NA ENTREVISTA:
+ * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
+ * 2. AÇÃO: executa a operação real no navegador ou na API.
+ * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
+ * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
+ * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-001
+ */
+test('[BUG-001] GET por identificador exige autenticação', async ({ request }) => {
   let created;
 
   try {
@@ -74,7 +162,12 @@ test('GET por identificador exige autenticação', async ({ request }) => {
   }
 });
 
-test('respostas com dados pessoais não são cacheáveis publicamente', async ({ request }) => {
+/**
+ * RISCO-CACHE-DADOS | SEGURANÇA
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[RISCO-CACHE-DADOS] respostas com dados pessoais não são cacheáveis publicamente', async ({ request }) => {
   const response = await request.get(EMPLOYEES_URL);
   expect(response.status()).toBe(200);
   expect(response.headers()['cache-control']).toMatch(/private|no-store/i);

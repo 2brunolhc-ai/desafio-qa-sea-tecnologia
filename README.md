@@ -4,6 +4,19 @@ Avaliação exploratória, automação e documentação da aplicação de cadast
 
 O projeto cobre a interface web, a API REST `/employees`, a consistência entre as duas camadas e riscos de segurança, privacidade e integridade. Todos os testes usam dados sintéticos e a limpeza exclui somente registros criados pela própria automação.
 
+
+## Rastreabilidade no próprio código
+
+Os cenários ligados aos 28 defeitos agora começam com identificadores como `[BUG-001]` e `[BUG-020]` no título do teste. Isso permite localizar rapidamente no VS Code com `Ctrl+Shift+F` e também filtrar a execução pelo ID.
+
+```bash
+npm run list:tests
+npm run test:bug -- BUG-001
+npm run test:bug -- BUG-020
+```
+
+Cada teste relacionado a bug recebeu um bloco de comentários com objetivo, preparação, ação, observação, expectativa, limpeza e explicação das palavras principais do Playwright. O mapa completo está em [`MAPA-CODIGO-BUGS.md`](MAPA-CODIGO-BUGS.md).
+
 ## Resultado consolidado
 
 Execução registrada em **18/07/2026**, no Chromium:

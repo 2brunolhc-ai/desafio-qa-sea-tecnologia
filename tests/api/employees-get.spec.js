@@ -7,7 +7,12 @@ import {
   getEmployeeById,
 } from '../helpers/apiHelpers.js';
 
-test('GET lista e localiza somente o registro criado pelo teste', async ({ request }) => {
+/**
+ * CONTROLE-API-GET-LISTA | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[CONTROLE-API-GET-LISTA] GET lista e localiza somente o registro criado pelo teste', async ({ request }) => {
   const data = createEmployeeData();
   let created;
 
@@ -36,7 +41,12 @@ test('GET lista e localiza somente o registro criado pelo teste', async ({ reque
   }
 });
 
-test('GET por ID retorna o registro criado pelo teste', async ({ request }) => {
+/**
+ * CONTROLE-API-GET-ID | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[CONTROLE-API-GET-ID] GET por ID retorna o registro criado pelo teste', async ({ request }) => {
   const data = createEmployeeData();
   let created;
 
@@ -56,7 +66,12 @@ test('GET por ID retorna o registro criado pelo teste', async ({ request }) => {
   }
 });
 
-test('GET por ID inexistente retorna 404 sem detalhes internos', async ({ request }) => {
+/**
+ * CONTROLE-API-404 | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[CONTROLE-API-404] GET por ID inexistente retorna 404 sem detalhes internos', async ({ request }) => {
   const response = await request.get(`${EMPLOYEES_URL}/qa-id-inexistente`);
   expect(response.status()).toBe(404);
   expect(await response.text()).toBe('Not Found');

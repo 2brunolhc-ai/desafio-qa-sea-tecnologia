@@ -7,7 +7,29 @@ import {
   getEmployeeById,
 } from '../helpers/apiHelpers.js';
 
-test('PATCH parcial preserva os demais campos do funcionário', async ({ request }) => {
+/**
+ * BUG-021 | API/INTEGRIDADE
+ * OBJETIVO: Altera somente role e depois confirma que nome, CPF e RG não foram apagados.
+ *
+ * COMO LER ESTE TESTE NA ENTREVISTA:
+ * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
+ * 2. AÇÃO: executa a operação real no navegador ou na API.
+ * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
+ * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
+ * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-021
+ */
+test('[BUG-021] PATCH parcial preserva os demais campos do funcionário', async ({ request }) => {
   const data = createEmployeeData();
   let created;
 
@@ -33,7 +55,12 @@ test('PATCH parcial preserva os demais campos do funcionário', async ({ request
   }
 });
 
-test('atualização concorrente com validador obsoleto é rejeitada', async ({ request }) => {
+/**
+ * RISCO-CONCORRENCIA | RISCO/INTEGRIDADE
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[RISCO-CONCORRENCIA] atualização concorrente com validador obsoleto é rejeitada', async ({ request }) => {
   const data = createEmployeeData();
   let created;
 
@@ -76,7 +103,29 @@ test('atualização concorrente com validador obsoleto é rejeitada', async ({ r
   }
 });
 
-test('API rejeita identificador definido pelo cliente', async ({ request }) => {
+/**
+ * BUG-022 | API/INTEGRIDADE
+ * OBJETIVO: Envia um id criado pelo cliente e espera 400 ou 422.
+ *
+ * COMO LER ESTE TESTE NA ENTREVISTA:
+ * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
+ * 2. AÇÃO: executa a operação real no navegador ou na API.
+ * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
+ * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
+ * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-022
+ */
+test('[BUG-022] API rejeita identificador definido pelo cliente', async ({ request }) => {
   const marker = `${TEST_DATA_PREFIX} ClientId ${Date.now()}`;
   const data = {
     id: `qa-client-id-${Date.now()}`,

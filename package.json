@@ -15,7 +15,9 @@
     "test:deeper": "playwright test tests/web/deeper-ui-audit.spec.js tests/api/data-integrity-and-concurrency.spec.js",
     "test:headed": "playwright test tests/web --headed",
     "test:debug": "playwright test --debug",
-    "test:report": "playwright show-report"
+    "test:report": "playwright show-report",
+    "test:bug": "node scripts/run-bug.js",
+    "list:tests": "node node_modules/@playwright/test/cli.js test --list"
   },
   "devDependencies": {
     "@playwright/test": "1.55.1"

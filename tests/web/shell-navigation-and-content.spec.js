@@ -38,7 +38,29 @@ async function shellState(page) {
   }));
 }
 
-test('itens inativos do menu lateral executam uma ação observável', async ({ page }) => {
+/**
+ * BUG-016 | WEB/NAVEGAÇÃO
+ * OBJETIVO: Clica em cada item lateral e compara o estado antes e depois.
+ *
+ * COMO LER ESTE TESTE NA ENTREVISTA:
+ * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
+ * 2. AÇÃO: executa a operação real no navegador ou na API.
+ * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
+ * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
+ * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-016
+ */
+test('[BUG-016] itens inativos do menu lateral executam uma ação observável', async ({ page }) => {
   await mockEmptyEmployeeList(page);
   await page.goto('/');
   await page.getByRole('heading', { name: 'Funcionário(s)' }).waitFor();
@@ -68,7 +90,29 @@ test('itens inativos do menu lateral executam uma ação observável', async ({ 
   expect(unchanged, 'cada item inativo deve navegar, abrir conteúdo ou indicar seleção').toEqual([]);
 });
 
-test('etapas superiores têm nomes próprios e permitem navegação', async ({ page }) => {
+/**
+ * BUG-016 | WEB/NAVEGAÇÃO
+ * OBJETIVO: Clica nas etapas 2 a 9 e exige mudança de rota, conteúdo ou seleção.
+ *
+ * COMO LER ESTE TESTE NA ENTREVISTA:
+ * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
+ * 2. AÇÃO: executa a operação real no navegador ou na API.
+ * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
+ * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
+ * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-016
+ */
+test('[BUG-016] etapas superiores têm nomes próprios e permitem navegação', async ({ page }) => {
   await mockEmptyEmployeeList(page);
   await page.goto('/');
 
@@ -88,7 +132,29 @@ test('etapas superiores têm nomes próprios e permitem navegação', async ({ p
   expect(unchanged, 'etapas 2 a 9 devem mudar rota, conteúdo ou estado selecionado').toEqual([]);
 });
 
-test('página inicial não publica conteúdo nem metadados de template', async ({ page }) => {
+/**
+ * BUG-017 | WEB/CONTEÚDO
+ * OBJETIVO: Procura Lorem ipsum, título Vite/React, idioma incorreto e favicon de template.
+ *
+ * COMO LER ESTE TESTE NA ENTREVISTA:
+ * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
+ * 2. AÇÃO: executa a operação real no navegador ou na API.
+ * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
+ * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
+ * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-017
+ */
+test('[BUG-017] página inicial não publica conteúdo nem metadados de template', async ({ page }) => {
   await mockEmptyEmployeeList(page);
   await page.goto('/');
 
@@ -103,7 +169,29 @@ test('página inicial não publica conteúdo nem metadados de template', async (
   expect.soft(await page.locator('link[rel="icon"]').getAttribute('href')).not.toContain('vite');
 });
 
-test('ícones humanos têm contexto de usuário ou são marcados como decorativos', async ({ page }) => {
+/**
+ * BUG-018 | WEB/ACESSIBILIDADE
+ * OBJETIVO: Verifica se ícones humanos têm ação/nome ou marcação decorativa.
+ *
+ * COMO LER ESTE TESTE NA ENTREVISTA:
+ * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
+ * 2. AÇÃO: executa a operação real no navegador ou na API.
+ * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
+ * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
+ * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-018
+ */
+test('[BUG-018] ícones humanos têm contexto de usuário ou são marcados como decorativos', async ({ page }) => {
   await mockEmptyEmployeeList(page);
   await page.goto('/');
 
@@ -137,7 +225,29 @@ test('ícones humanos têm contexto de usuário ou são marcados como decorativo
   ).toBe(true);
 });
 
-test('etapas e conteúdo principal permanecem alcançáveis em 390 px', async ({ page }) => {
+/**
+ * BUG-019 | WEB/RESPONSIVIDADE
+ * OBJETIVO: Mede recorte horizontal e sobreposição entre ilustração e texto no mobile.
+ *
+ * COMO LER ESTE TESTE NA ENTREVISTA:
+ * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
+ * 2. AÇÃO: executa a operação real no navegador ou na API.
+ * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
+ * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
+ * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
+ *
+ * PALAVRAS-CHAVE:
+ * - test(...): registra um cenário no Playwright.
+ * - async: permite esperar operações assíncronas.
+ * - await: espera a ação terminar antes de seguir.
+ * - page: aba do navegador controlada pelo Playwright.
+ * - request: cliente HTTP direto, sem abrir a tela.
+ * - expect(...): compara o resultado real com o esperado.
+ * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
+ *
+ * EXECUTAR: npm run test:bug -- BUG-019
+ */
+test('[BUG-019] etapas e conteúdo principal permanecem alcançáveis em 390 px', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await mockEmptyEmployeeList(page);
   await page.goto('/');
@@ -193,7 +303,12 @@ test('etapas e conteúdo principal permanecem alcançáveis em 390 px', async ({
   ).toBe(true);
 });
 
-test('nome com marcação HTML inerte é exibido como texto, sem criar elemento', async ({ page, request }) => {
+/**
+ * CONTROLE-SAIDA-HTML | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[CONTROLE-SAIDA-HTML] nome com marcação HTML inerte é exibido como texto, sem criar elemento', async ({ page, request }) => {
   const marker = `QA Automacao <b>INERTE-${Date.now()}</b>`;
   const data = createEmployeeData({ name: marker });
   let created;

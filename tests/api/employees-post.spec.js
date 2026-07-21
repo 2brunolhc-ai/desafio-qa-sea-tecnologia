@@ -2,7 +2,12 @@ import { test, expect } from '@playwright/test';
 import { createEmployeeData } from '../helpers/employeeFactory.js';
 import { cleanupEmployee, createEmployee } from '../helpers/apiHelpers.js';
 
-test('POST cadastra trabalhador fictício com contrato completo', async ({ request }) => {
+/**
+ * CONTROLE-API-POST | CONTROLE POSITIVO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[CONTROLE-API-POST] POST cadastra trabalhador fictício com contrato completo', async ({ request }) => {
   const data = createEmployeeData();
   let created;
 
@@ -19,7 +24,12 @@ test('POST cadastra trabalhador fictício com contrato completo', async ({ reque
   }
 });
 
-test('POST aceita campo extra e o comportamento fica registrado como risco', async ({ request }) => {
+/**
+ * RISCO-CAMPO-EXTRA | RISCO DOCUMENTADO
+ * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
+ * A leitura segue: preparar → agir → observar → validar → limpar.
+ */
+test('[RISCO-CAMPO-EXTRA] POST aceita campo extra e o comportamento fica registrado como risco', async ({ request }) => {
   const data = createEmployeeData({ campoExtraQA: 'valor-ficticio' });
   let created;
 
