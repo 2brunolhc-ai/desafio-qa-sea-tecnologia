@@ -124,6 +124,10 @@ npx playwright test tests/api/employees-validation.spec.js \
   -g "rejeita nome nulo" --reporter=line --workers=1
 ```
 
+## Rastreabilidade dos cenários
+
+Os títulos dos testes usam identificadores como `[BUG-020]`. O comando `npm run test:bug -- BUG-020` executa todos os cenários associados ao defeito, e `MAPA-CODIGO-BUGS.md` aponta os arquivos correspondentes. Comentários curtos marcam preparação, ação, resultado esperado e limpeza somente quando ajudam a entender decisões não óbvias.
+
 ## Estrutura do repositório
 
 ```text

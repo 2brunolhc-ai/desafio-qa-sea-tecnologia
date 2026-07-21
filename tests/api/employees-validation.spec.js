@@ -5,12 +5,7 @@ import {
 } from '../helpers/employeeFactory.js';
 import { cleanupEmployee, createEmployee } from '../helpers/apiHelpers.js';
 
-/**
- * BUG-002 | API/VALIDAÇÃO SERVER-SIDE
- * Cada objeto abaixo é um caso inválido. O campo title vira o nome do teste e build monta o payload.
- * O loop no final executa o mesmo fluxo para todos os casos: POST → status esperado 400/422 → limpeza.
- * EXECUTAR: npm run test:bug -- BUG-002
- */
+// Casos inválidos reutilizam o mesmo fluxo para manter a cobertura legível e extensível.
 const invalidScenarios = [
   {
     title: '[BUG-002] rejeita trabalhador sem nome',
@@ -79,24 +74,23 @@ const invalidScenarios = [
   },
 ];
 
-// Gera um teste Playwright independente para cada item da tabela acima.
+// Cada entrada gera um teste independente no relatório do Playwright.
 for (const scenario of invalidScenarios) {
   test(scenario.title, async ({ request }) => {
-    // PREPARAÇÃO: monta apenas o payload inválido deste cenário.
+    // Preparação: monta somente o payload inválido do cenário atual.
     const { data } = scenario.build();
     let created;
     let response;
 
     try {
-      // AÇÃO: envia o payload diretamente para POST /employees.
+      // Ação: envia o payload diretamente para POST /employees.
       const creation = await createEmployee(request, data);
       response = creation.response;
       if (response.status() === 201) created = creation.body;
-
-      // EXPECTATIVA: dados inválidos devem ser rejeitados pelo servidor.
+      // Observação e expectativa: o servidor deve rejeitar o payload com 400 ou 422.
       expect([400, 422]).toContain(response.status());
     } finally {
-      // LIMPEZA: se o produto aceitou por engano com 201, remove somente o registro QA.
+      // Limpeza: remove o registro caso o produto tenha aceitado o dado inválido.
       await cleanupEmployee(request, created);
     }
   });

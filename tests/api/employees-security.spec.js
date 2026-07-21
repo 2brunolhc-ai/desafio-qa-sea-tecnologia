@@ -6,56 +6,16 @@ import {
   createEmployee,
 } from '../helpers/apiHelpers.js';
 
-/**
- * BUG-001 | API/SEGURANÇA
- * OBJETIVO: Chama GET /employees sem token e espera 401.
- *
- * COMO LER ESTE TESTE NA ENTREVISTA:
- * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
- * 2. AÇÃO: executa a operação real no navegador ou na API.
- * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
- * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
- * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
- *
- * PALAVRAS-CHAVE:
- * - test(...): registra um cenário no Playwright.
- * - async: permite esperar operações assíncronas.
- * - await: espera a ação terminar antes de seguir.
- * - page: aba do navegador controlada pelo Playwright.
- * - request: cliente HTTP direto, sem abrir a tela.
- * - expect(...): compara o resultado real com o esperado.
- * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
- *
- * EXECUTAR: npm run test:bug -- BUG-001
- */
 test('[BUG-001] GET de dados de trabalhadores exige autenticação', async ({ request }) => {
+  // Preparação: não envia token ou sessão, reproduzindo um acesso anônimo.
+  // Ação: consulta a coleção de trabalhadores diretamente pela API.
   const response = await request.get(EMPLOYEES_URL);
+  // Observação e expectativa: o status observado deve bloquear a leitura anônima com HTTP 401.
   expect(response.status()).toBe(401);
 });
 
-/**
- * BUG-001 | API/SEGURANÇA
- * OBJETIVO: Cria somente um registro QA, tenta alterá-lo sem token e espera 401 ou 403.
- *
- * COMO LER ESTE TESTE NA ENTREVISTA:
- * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
- * 2. AÇÃO: executa a operação real no navegador ou na API.
- * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
- * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
- * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
- *
- * PALAVRAS-CHAVE:
- * - test(...): registra um cenário no Playwright.
- * - async: permite esperar operações assíncronas.
- * - await: espera a ação terminar antes de seguir.
- * - page: aba do navegador controlada pelo Playwright.
- * - request: cliente HTTP direto, sem abrir a tela.
- * - expect(...): compara o resultado real com o esperado.
- * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
- *
- * EXECUTAR: npm run test:bug -- BUG-001
- */
 test('[BUG-001] PATCH de registro exige autenticação ou autorização', async ({ request }) => {
+  // Preparação: gera um registro sintético para que a alteração nunca atinja dados de terceiros.
   const data = createEmployeeData();
   let created;
 
@@ -64,6 +24,7 @@ test('[BUG-001] PATCH de registro exige autenticação ou autorização', async 
     expect(creation.response.status()).toBe(201);
     created = creation.body;
 
+    // Ação: tenta alterar o próprio registro sem enviar credenciais.
     const response = await request.patch(`${EMPLOYEES_URL}/${created.id}`, {
       data: {
         state: {
@@ -75,17 +36,14 @@ test('[BUG-001] PATCH de registro exige autenticação ou autorização', async 
       },
     });
 
+    // Observação e expectativa: a API deve recusar a mutação anônima com 401 ou 403.
     expect([401, 403]).toContain(response.status());
   } finally {
+    // Limpeza: remove apenas o registro sintético criado neste cenário.
     await cleanupEmployee(request, created);
   }
 });
 
-/**
- * RISCO-CORS-AMPLO | RISCO DOCUMENTADO
- * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
- * A leitura segue: preparar → agir → observar → validar → limpar.
- */
 test('[RISCO-CORS-AMPLO] preflight expõe CORS amplo sem credenciais', async ({ request }) => {
   const response = await request.fetch(EMPLOYEES_URL, {
     method: 'OPTIONS',

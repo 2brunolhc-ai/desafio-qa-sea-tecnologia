@@ -1,8 +1,4 @@
-/**
- * CONFIGURAÇÃO CENTRAL DO PLAYWRIGHT
- * workers=1 reduz colisões no ambiente compartilhado; retries=0 evita repetir mutações.
- * screenshot/video ficam retidos nas falhas para facilitar evidência e diagnóstico.
- */
+// Execução sequencial e sem retries para reduzir colisões e repetição de mutações.
 import { existsSync } from 'node:fs';
 import process from 'node:process';
 import { defineConfig, devices } from '@playwright/test';

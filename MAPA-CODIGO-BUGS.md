@@ -43,16 +43,3 @@ No relatório do Playwright, o mesmo identificador aparece no nome do cenário.
 | BUG-026 | `npm run test:bug -- BUG-026` | `tests/web/deeper-ui-audit.spec.js` |
 | BUG-027 | `npm run test:bug -- BUG-027` | `tests/web/deeper-ui-audit.spec.js` |
 | BUG-028 | `npm run test:bug -- BUG-028` | `tests/web/deeper-ui-audit.spec.js` |
-
-## Como explicar qualquer linha
-
-- `test('...', async ({ page, request }) => {`: registra o cenário; `page` controla o navegador e `request` chama a API.
-- `const`: guarda um valor que não será reatribuído.
-- `let`: guarda um valor que pode ser atribuído depois, como o registro criado.
-- `await`: espera a operação terminar.
-- `expect(valor)`: compara o resultado real com a regra esperada.
-- `try/finally`: o teste executa no `try`; a limpeza é tentada no `finally`, mesmo quando uma expectativa falha.
-- `page.route`: intercepta uma requisição do navegador para criar uma condição controlada.
-- `request.get/post/patch/delete`: chama a API diretamente, sem depender da interface.
-
-Os comentários dentro dos arquivos separam objetivo, preparação, ação, observação, expectativa e limpeza.

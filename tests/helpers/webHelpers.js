@@ -1,8 +1,4 @@
-/**
- * HELPERS DA INTERFACE WEB
- * Responsabilidade: agrupar ações repetidas do formulário e a captura do POST /employees.
- * Em entrevista: explique que helpers reduzem duplicação; as expectativas específicas ficam nos testes.
- */
+// Ações reutilizáveis do formulário, mantidas fora dos cenários para reduzir duplicação.
 import { expect } from '@playwright/test';
 
 export async function openEmployeeForm(page) {

@@ -38,29 +38,8 @@ async function shellState(page) {
   }));
 }
 
-/**
- * BUG-016 | WEB/NAVEGAÇÃO
- * OBJETIVO: Clica em cada item lateral e compara o estado antes e depois.
- *
- * COMO LER ESTE TESTE NA ENTREVISTA:
- * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
- * 2. AÇÃO: executa a operação real no navegador ou na API.
- * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
- * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
- * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
- *
- * PALAVRAS-CHAVE:
- * - test(...): registra um cenário no Playwright.
- * - async: permite esperar operações assíncronas.
- * - await: espera a ação terminar antes de seguir.
- * - page: aba do navegador controlada pelo Playwright.
- * - request: cliente HTTP direto, sem abrir a tela.
- * - expect(...): compara o resultado real com o esperado.
- * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
- *
- * EXECUTAR: npm run test:bug -- BUG-016
- */
 test('[BUG-016] itens inativos do menu lateral executam uma ação observável', async ({ page }) => {
+  // Preparação: abre a página com estado controlado e define os itens laterais avaliados.
   await mockEmptyEmployeeList(page);
   await page.goto('/');
   await page.getByRole('heading', { name: 'Funcionário(s)' }).waitFor();
@@ -74,6 +53,7 @@ test('[BUG-016] itens inativos do menu lateral executam uma ação observável',
   ];
   const unchanged = [];
 
+  // Ação: clica em cada item e compara o estado da interface antes e depois.
   for (const [name, selector] of selectors) {
     const icon = page.locator(selector);
     await expect(icon, `ícone lateral ${name}`).toHaveCount(1);
@@ -87,32 +67,12 @@ test('[BUG-016] itens inativos do menu lateral executam uma ação observável',
     path: 'evidence/screenshots/BUG-016-menus-sem-acao.png',
     fullPage: true,
   });
+  // Observação e expectativa: nenhum item deve permanecer sem navegação, conteúdo ou indicação de seleção.
   expect(unchanged, 'cada item inativo deve navegar, abrir conteúdo ou indicar seleção').toEqual([]);
 });
 
-/**
- * BUG-016 | WEB/NAVEGAÇÃO
- * OBJETIVO: Clica nas etapas 2 a 9 e exige mudança de rota, conteúdo ou seleção.
- *
- * COMO LER ESTE TESTE NA ENTREVISTA:
- * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
- * 2. AÇÃO: executa a operação real no navegador ou na API.
- * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
- * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
- * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
- *
- * PALAVRAS-CHAVE:
- * - test(...): registra um cenário no Playwright.
- * - async: permite esperar operações assíncronas.
- * - await: espera a ação terminar antes de seguir.
- * - page: aba do navegador controlada pelo Playwright.
- * - request: cliente HTTP direto, sem abrir a tela.
- * - expect(...): compara o resultado real com o esperado.
- * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
- *
- * EXECUTAR: npm run test:bug -- BUG-016
- */
 test('[BUG-016] etapas superiores têm nomes próprios e permitem navegação', async ({ page }) => {
+  // Preparação: abre a página e coleta as nove etapas e seus rótulos.
   await mockEmptyEmployeeList(page);
   await page.goto('/');
 
@@ -121,6 +81,7 @@ test('[BUG-016] etapas superiores têm nomes próprios e permitem navegação', 
   const labels = await page.locator('p').filter({ hasText: /^ITEM / }).allTextContents();
   const unchanged = [];
 
+  // Ação: aciona as etapas 2 a 9 e registra quais não alteram o estado.
   for (let index = 1; index < 9; index += 1) {
     const before = await shellState(page);
     await steps.nth(index).click();
@@ -128,75 +89,37 @@ test('[BUG-016] etapas superiores têm nomes próprios e permitem navegação', 
     if (JSON.stringify(before) === JSON.stringify(after)) unchanged.push(index + 1);
   }
 
+  // Observação e expectativa: os nomes devem ser distintos e cada etapa deve produzir uma mudança observável.
   expect.soft(new Set(labels).size, 'as nove etapas precisam de nomes distintos').toBe(labels.length);
   expect(unchanged, 'etapas 2 a 9 devem mudar rota, conteúdo ou estado selecionado').toEqual([]);
 });
 
-/**
- * BUG-017 | WEB/CONTEÚDO
- * OBJETIVO: Procura Lorem ipsum, título Vite/React, idioma incorreto e favicon de template.
- *
- * COMO LER ESTE TESTE NA ENTREVISTA:
- * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
- * 2. AÇÃO: executa a operação real no navegador ou na API.
- * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
- * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
- * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
- *
- * PALAVRAS-CHAVE:
- * - test(...): registra um cenário no Playwright.
- * - async: permite esperar operações assíncronas.
- * - await: espera a ação terminar antes de seguir.
- * - page: aba do navegador controlada pelo Playwright.
- * - request: cliente HTTP direto, sem abrir a tela.
- * - expect(...): compara o resultado real com o esperado.
- * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
- *
- * EXECUTAR: npm run test:bug -- BUG-017
- */
 test('[BUG-017] página inicial não publica conteúdo nem metadados de template', async ({ page }) => {
+  // Preparação: abre a página inicial com a lista vazia controlada.
   await mockEmptyEmployeeList(page);
   await page.goto('/');
 
+  // Ação: registra a evidência visual e consulta textos e metadados da página.
   await page.screenshot({
     path: 'evidence/screenshots/BUG-017-placeholder-e-metadados.png',
     fullPage: true,
   });
 
+  // Observação e expectativa: conteúdo e identificadores do template não devem estar publicados.
   await expect.soft(page.getByText(/^Lorem ipsum dolor sit amet/)).toHaveCount(0);
   await expect.soft(page).not.toHaveTitle(/Vite|React|TS/i);
   expect.soft(await page.locator('html').getAttribute('lang')).toMatch(/^pt(?:-|$)/i);
   expect.soft(await page.locator('link[rel="icon"]').getAttribute('href')).not.toContain('vite');
 });
 
-/**
- * BUG-018 | WEB/ACESSIBILIDADE
- * OBJETIVO: Verifica se ícones humanos têm ação/nome ou marcação decorativa.
- *
- * COMO LER ESTE TESTE NA ENTREVISTA:
- * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
- * 2. AÇÃO: executa a operação real no navegador ou na API.
- * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
- * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
- * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
- *
- * PALAVRAS-CHAVE:
- * - test(...): registra um cenário no Playwright.
- * - async: permite esperar operações assíncronas.
- * - await: espera a ação terminar antes de seguir.
- * - page: aba do navegador controlada pelo Playwright.
- * - request: cliente HTTP direto, sem abrir a tela.
- * - expect(...): compara o resultado real com o esperado.
- * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
- *
- * EXECUTAR: npm run test:bug -- BUG-018
- */
 test('[BUG-018] ícones humanos têm contexto de usuário ou são marcados como decorativos', async ({ page }) => {
+  // Preparação: abre a página e localiza o ícone de pessoa e a ilustração humana.
   await mockEmptyEmployeeList(page);
   await page.goto('/');
 
   const personIcon = page.locator('img[src*="person-"]');
   await expect(personIcon).toHaveCount(1);
+  // Ação: inspeciona ação, nome acessível e marcação decorativa.
   const userContext = await personIcon.evaluate((image) => {
     const control = image.closest('a,button,[role="button"],[role="link"]');
     const container = image.parentElement;
@@ -217,6 +140,7 @@ test('[BUG-018] ícones humanos têm contexto de usuário ou são marcados como 
     decorative: image.getAttribute('aria-hidden') === 'true' || image.getAttribute('role') === 'presentation',
   }));
 
+  // Observação e expectativa: elementos humanos devem ter contexto funcional ou ser explicitamente decorativos.
   expect.soft(userContext.interactive, 'ícone de pessoa deve abrir perfil/conta').toBe(true);
   expect.soft(userContext.accessibleName, 'ícone de pessoa precisa identificar sua ação').not.toBe('');
   expect(
@@ -225,33 +149,13 @@ test('[BUG-018] ícones humanos têm contexto de usuário ou são marcados como 
   ).toBe(true);
 });
 
-/**
- * BUG-019 | WEB/RESPONSIVIDADE
- * OBJETIVO: Mede recorte horizontal e sobreposição entre ilustração e texto no mobile.
- *
- * COMO LER ESTE TESTE NA ENTREVISTA:
- * 1. PREPARAÇÃO: cria dados sintéticos ou controla o estado necessário.
- * 2. AÇÃO: executa a operação real no navegador ou na API.
- * 3. OBSERVAÇÃO: captura resposta, DOM, status HTTP ou medida de layout.
- * 4. EXPECTATIVA: expect(...) descreve o comportamento correto.
- * 5. LIMPEZA: quando há criação, finally remove somente o registro QA.
- *
- * PALAVRAS-CHAVE:
- * - test(...): registra um cenário no Playwright.
- * - async: permite esperar operações assíncronas.
- * - await: espera a ação terminar antes de seguir.
- * - page: aba do navegador controlada pelo Playwright.
- * - request: cliente HTTP direto, sem abrir a tela.
- * - expect(...): compara o resultado real com o esperado.
- * - try/finally: garante a tentativa de limpeza mesmo se o teste falhar.
- *
- * EXECUTAR: npm run test:bug -- BUG-019
- */
 test('[BUG-019] etapas e conteúdo principal permanecem alcançáveis em 390 px', async ({ page }) => {
+  // Preparação: define a viewport móvel e abre a página com dados controlados.
   await page.setViewportSize({ width: 390, height: 844 });
   await mockEmptyEmployeeList(page);
   await page.goto('/');
 
+  // Ação: mede recorte horizontal e sobreposição entre imagem e texto.
   const layout = await page.evaluate(() => {
     const steps = [...document.querySelectorAll('img[src*="building-fill"]')];
     const lastStep = steps.at(-1)?.parentElement;
@@ -293,6 +197,7 @@ test('[BUG-019] etapas e conteúdo principal permanecem alcançáveis em 390 px'
     fullPage: true,
   });
 
+  // Observação e expectativa: o conteúdo não deve se sobrepor e a última etapa precisa estar visível ou rolável.
   expect.soft(
     layout.illustrationOverlapsText,
     'a silhueta humana não deve cobrir o texto inicial',
@@ -303,11 +208,6 @@ test('[BUG-019] etapas e conteúdo principal permanecem alcançáveis em 390 px'
   ).toBe(true);
 });
 
-/**
- * CONTROLE-SAIDA-HTML | CONTROLE POSITIVO
- * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
- * A leitura segue: preparar → agir → observar → validar → limpar.
- */
 test('[CONTROLE-SAIDA-HTML] nome com marcação HTML inerte é exibido como texto, sem criar elemento', async ({ page, request }) => {
   const marker = `QA Automacao <b>INERTE-${Date.now()}</b>`;
   const data = createEmployeeData({ name: marker });

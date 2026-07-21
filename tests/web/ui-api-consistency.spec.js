@@ -11,11 +11,6 @@ import {
   submitAndCaptureEmployee,
 } from '../helpers/webHelpers.js';
 
-/**
- * CONTROLE-API-PARA-WEB | CONTROLE POSITIVO
- * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
- * A leitura segue: preparar → agir → observar → validar → limpar.
- */
 test('[CONTROLE-API-PARA-WEB] API para interface exibe os campos principais do registro criado', async ({ page, request }) => {
   const data = createEmployeeData();
   const employee = data.state.employee;
@@ -59,11 +54,6 @@ test('[CONTROLE-API-PARA-WEB] API para interface exibe os campos principais do r
   }
 });
 
-/**
- * CONTROLE-WEB-PARA-API | CONTROLE POSITIVO
- * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
- * A leitura segue: preparar → agir → observar → validar → limpar.
- */
 test('[CONTROLE-WEB-PARA-API] interface para API preserva todos os dados preenchidos', async ({ page, request }) => {
   const data = createEmployeeData();
   const employee = data.state.employee;
