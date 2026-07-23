@@ -17,6 +17,8 @@ npm run test:bug -- BUG-020
 
 Cada teste relacionado a bug recebeu um bloco de comentários com objetivo, preparação, ação, observação, expectativa, limpeza e explicação das palavras principais do Playwright. O mapa completo está em [`MAPA-CODIGO-BUGS.md`](MAPA-CODIGO-BUGS.md).
 
+Para estudar ou apresentar o projeto, use o [`guia completo do código`](docs/GUIA-CODIGO-COMPLETO.md). Ele cobre `package.json`, configuração, script por BUG, helpers, fixture e os 14 arquivos de teste, explicando linha/bloco, motivo, limite e fala sugerida. A [`análise dos vídeos aplicada ao site`](docs/ANALISE-VIDEOS-X-SITE.md) separa o que foi encontrado, o que não se aplica e quais bugs realmente foram comprovados.
+
 
 ### Como funciona o comando por bug
 
@@ -49,6 +51,8 @@ Execução registrada em **18/07/2026**, no Chromium:
 
 **78 testes não significam 78 bugs.** Um teste representa um cenário com passos e expectativa; um mesmo defeito pode ser coberto por vários testes. Os 60 resultados reprovados foram consolidados em 28 bugs documentados.
 
+Revalidação em **23/07/2026**: a sintaxe permaneceu válida, os 78 testes foram descobertos, o smoke passou **5/5** e a regressão repetiu **18 aprovados / 60 falhas do produto / 0 timeout / 0 skip / 0 interrupção**, em **224,5 s**, com **0 registro QA residual**. Consulte o [registro da revalidação](docs/revalidacao-2026-07-23.md).
+
 A suíte completa termina com código de saída `1` enquanto o produto continuar contrariando as expectativas funcionais e de segurança. Isso não representa falha de infraestrutura: na regressão registrada não houve timeout, skip, interrupção ou seletor bloqueando a execução.
 
 ## Achados prioritários
@@ -62,6 +66,10 @@ A suíte completa termina com código de saída `1` enquanto o produto continuar
 
 Relatórios principais:
 
+- [Guia completo do código para estudar e apresentar](docs/GUIA-CODIGO-COMPLETO.md)
+- [Análise dos vídeos de segurança aplicada ao site](docs/ANALISE-VIDEOS-X-SITE.md)
+- [Manual em PDF para reproduzir manualmente os 28 bugs](docs/manual-pratico-reproducao-manual-28-bugs-sea.pdf)
+- [Revalidação final de 23/07/2026](docs/revalidacao-2026-07-23.md)
 - [Auditoria completa consolidada](docs/full-system-audit-2026-07-18.md)
 - [Complemento final de 17 cenários](docs/deepest-audit-2026-07-18.md)
 - [BUG-020 a BUG-028](docs/bug-report-deepest.md)

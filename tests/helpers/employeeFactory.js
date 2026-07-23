@@ -3,10 +3,13 @@
 export const TEST_DATA_PREFIX = 'QA Automacao';
 
 function uniqueSuffix() {
+  // Date.now diferencia execuções; o trecho aleatório diferencia chamadas no mesmo milissegundo.
+  // base 36 reduz o tamanho usando números e letras; slice mantém somente seis caracteres.
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 export function createEmployeeData(overrides = {}) {
+  // Cada chamada recebe um sufixo novo para o nome, RG e CA não colidirem.
   const suffix = uniqueSuffix();
 
   return {
@@ -23,6 +26,7 @@ export function createEmployeeData(overrides = {}) {
         activity: 'Ativid 02',
         epi: 'luvas-descartaveis',
         caNumber: `QA-CA-${suffix}`,
+        // O spread fica por último de propósito: o cenário pode substituir somente o campo avaliado.
         ...overrides,
       },
     },
@@ -30,6 +34,7 @@ export function createEmployeeData(overrides = {}) {
 }
 
 export function createInvalidEmployeeData(overrides = {}) {
+  // Payloads inválidos também levam um marcador seguro para eventual limpeza.
   const marker = `${TEST_DATA_PREFIX} Invalid ${uniqueSuffix()}`;
 
   return {
@@ -39,6 +44,7 @@ export function createInvalidEmployeeData(overrides = {}) {
         employee: {
           testMarker: marker,
           rg: marker,
+          // O cenário injeta apenas a combinação inválida que deseja provar.
           ...overrides,
         },
       },
