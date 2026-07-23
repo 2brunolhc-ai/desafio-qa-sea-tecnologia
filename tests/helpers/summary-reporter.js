@@ -1,19 +1,8 @@
-/**
- * REPÓRTER RESUMIDO PARA AUDITORIA
- *
- * O repórter não altera resultado de teste. Ele apenas transforma os eventos do
- * Playwright em um JSON pequeno, ideal para comparar execuções sem publicar
- * respostas de API, CPFs ou grandes pilhas de erro.
- *
- * EXECUTAR:
- * npx playwright test --reporter=./tests/helpers/summary-reporter.js
- */
+// Emite somente contagens e duração, sem corpos de resposta ou dados pessoais.
 export default class SummaryReporter {
   constructor() {
-    // O construtor cria o estado zerado antes de a suíte começar.
     this.startedAt = 0;
     this.total = 0;
-    // As chaves usam os mesmos nomes de status emitidos pelo Playwright.
     this.counts = {
       passed: 0,
       failed: 0,
@@ -24,25 +13,26 @@ export default class SummaryReporter {
   }
 
   onBegin(_config, suite) {
-    // `_config` não é usado; o sublinhado torna essa decisão explícita.
     this.startedAt = Date.now();
-    // allTests inclui todos os projetos e casos parametrizados descobertos.
     this.total = suite.allTests().length;
   }
 
   onTestEnd(_test, result) {
-    // Ignora status desconhecido e soma exatamente uma ocorrência ao status recebido.
     if (Object.hasOwn(this.counts, result.status)) this.counts[result.status] += 1;
   }
 
   onEnd(result) {
-    // JSON.stringify com indentação 2 gera saída legível e fácil de arquivar/comparar.
-    console.log(JSON.stringify({
-      suiteStatus: result.status,
-      discovered: this.total,
-      ...this.counts,
-      // Date.now produz milissegundos; divisão por 1000 e toFixed(1) geram segundos.
-      durationSeconds: Number(((Date.now() - this.startedAt) / 1000).toFixed(1)),
-    }, null, 2));
+    console.log(
+      JSON.stringify(
+        {
+          suiteStatus: result.status,
+          discovered: this.total,
+          ...this.counts,
+          durationSeconds: Number(((Date.now() - this.startedAt) / 1000).toFixed(1)),
+        },
+        null,
+        2,
+      ),
+    );
   }
 }

@@ -81,10 +81,6 @@ npm run test:bug -- BUG-002
 npm run test:bug -- BUG-023
 ```
 
-## Fala pronta
-
-“Usei os vídeos como checklist de hipóteses, não como lista de bugs pronta. Não encontrei Supabase, `service_role`, `localStorage` nem `sessionStorage` no frontend publicado. Por isso esses itens não entraram como defeito. O que consegui provar foi mais objetivo: `/employees` aceita acesso anônimo e o servidor aceita dados inválidos. Esses comportamentos estão automatizados nos BUG-001, BUG-002 e BUG-023.”
-
 ## Conclusão
 
 Os vídeos **não acrescentaram um 29º bug comprovado**. Eles reforçaram e ajudaram a explicar três achados existentes. Registrar “não encontrado” foi uma decisão de qualidade: evita falso positivo, severidade inflada e alegação sobre tecnologia que o sistema não demonstrou usar.

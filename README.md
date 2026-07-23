@@ -15,9 +15,7 @@ npm run test:bug -- BUG-001
 npm run test:bug -- BUG-020
 ```
 
-Cada teste relacionado a bug recebeu um bloco de comentários com objetivo, preparação, ação, observação, expectativa, limpeza e explicação das palavras principais do Playwright. O mapa completo está em [`MAPA-CODIGO-BUGS.md`](MAPA-CODIGO-BUGS.md).
-
-Para estudar ou apresentar o projeto, use o [`guia completo do código`](docs/GUIA-CODIGO-COMPLETO.md). Ele cobre `package.json`, configuração, script por BUG, helpers, fixture e os 14 arquivos de teste, explicando linha/bloco, motivo, limite e fala sugerida. A [`análise dos vídeos aplicada ao site`](docs/ANALISE-VIDEOS-X-SITE.md) separa o que foi encontrado, o que não se aplica e quais bugs realmente foram comprovados.
+O mapa completo está em [`MAPA-CODIGO-BUGS.md`](MAPA-CODIGO-BUGS.md). Os testes mantêm comentários somente quando existe uma decisão não óbvia, como limite de mock, proteção de limpeza ou janela de observação. A [`análise dos vídeos aplicada ao site`](docs/ANALISE-VIDEOS-X-SITE.md) separa o que foi encontrado, o que não se aplica e quais bugs realmente foram comprovados.
 
 
 ### Como funciona o comando por bug
@@ -36,22 +34,22 @@ O uso de `--workers=1` permanece intencional: os testes criam e alteram dados em
 
 ## Resultado consolidado
 
-Execução registrada em **18/07/2026**, no Chromium:
+Última revalidação em **23/07/2026**, no Chromium:
 
 | Métrica | Resultado |
 | --- | ---: |
 | Cenários Playwright | **78** |
-| Aprovados | **18** |
-| Reprovados por comportamento do produto | **60** |
+| Aprovados | **17** |
+| Reprovados por comportamento do produto | **61** |
 | Bugs confirmados | **28** |
 | Severidade | **5 altos, 19 médios e 4 baixos** |
 | Timeout, skip ou interrupção | **0** |
 | Registros `QA Automacao` remanescentes | **0** |
-| Duração da regressão registrada | **274,6 s** |
+| Duração da regressão registrada | **228,5 s** |
 
-**78 testes não significam 78 bugs.** Um teste representa um cenário com passos e expectativa; um mesmo defeito pode ser coberto por vários testes. Os 60 resultados reprovados foram consolidados em 28 bugs documentados.
+**78 testes não significam 78 bugs.** Um teste representa um cenário com passos e expectativa; um mesmo defeito pode ser coberto por vários testes. Os 61 resultados reprovados foram consolidados em 28 bugs documentados.
 
-Revalidação em **23/07/2026**: a sintaxe permaneceu válida, os 78 testes foram descobertos, o smoke passou **5/5** e a regressão repetiu **18 aprovados / 60 falhas do produto / 0 timeout / 0 skip / 0 interrupção**, em **224,5 s**, com **0 registro QA residual**. Consulte o [registro da revalidação](docs/revalidacao-2026-07-23.md).
+O resultado anterior era 18/60. Na revisão do código, o default de `usesEpi` foi corrigido para refletir o dado preenchido; o antigo controle UI → API passou a demonstrar corretamente o BUG-020. A sintaxe permaneceu válida, o smoke passou **4/4** e sobraram **0 registros QA**. Consulte o [registro da revalidação](docs/revalidacao-2026-07-23.md).
 
 A suíte completa termina com código de saída `1` enquanto o produto continuar contrariando as expectativas funcionais e de segurança. Isso não representa falha de infraestrutura: na regressão registrada não houve timeout, skip, interrupção ou seletor bloqueando a execução.
 
@@ -66,7 +64,6 @@ A suíte completa termina com código de saída `1` enquanto o produto continuar
 
 Relatórios principais:
 
-- [Guia completo do código para estudar e apresentar](docs/GUIA-CODIGO-COMPLETO.md)
 - [Análise dos vídeos de segurança aplicada ao site](docs/ANALISE-VIDEOS-X-SITE.md)
 - [Manual em PDF para reproduzir manualmente os 28 bugs](docs/manual-pratico-reproducao-manual-28-bugs-sea.pdf)
 - [Revalidação final de 23/07/2026](docs/revalidacao-2026-07-23.md)
@@ -108,7 +105,7 @@ Não existe token configurado porque a aplicação observada não exige autentic
 | `npm test` | Executa os 78 cenários. |
 | `npm run test:web` | Executa os cenários de interface e integração UI/API. |
 | `npm run test:api` | Executa contrato, validação, segurança e integridade da API. |
-| `npm run test:smoke` | Executa os cinco controles positivos de GET e consistência UI/API. |
+| `npm run test:smoke` | Executa quatro controles positivos de GET e consistência API → UI. |
 | `npm run test:deep-audit` | Executa cadastro avançado, validações e métodos/cache. |
 | `npm run test:shell` | Executa menus, etapas, conteúdo, mobile e saída HTML. |
 | `npm run test:security` | Executa autenticação, CORS, headers, cache, banners e TRACE. |
@@ -149,7 +146,7 @@ npx playwright test tests/api/employees-validation.spec.js \
 
 ## Rastreabilidade dos cenários
 
-Os títulos dos testes usam identificadores como `[BUG-020]`. O comando `npm run test:bug -- BUG-020` executa todos os cenários associados ao defeito, e `MAPA-CODIGO-BUGS.md` aponta os arquivos correspondentes. Comentários técnicos identificam o objetivo, as palavras-chave do Playwright, o comando de execução e as etapas de preparação, ação, observação, expectativa e limpeza junto ao trecho correspondente.
+Os títulos usam identificadores como `[BUG-020]`. O comando `npm run test:bug -- BUG-020` executa os cenários associados ao defeito, e `MAPA-CODIGO-BUGS.md` aponta os arquivos correspondentes.
 
 ## Estrutura do repositório
 
@@ -215,7 +212,7 @@ Os testes que criam dados chamam a limpeza no `finally`. Assim, mesmo que uma as
 | Suíte-base | 23 | 12 | 11 | 7 |
 | Auditoria profunda | 49 | 13 | 36 | 15 |
 | Auditoria completa do shell | 61 | 15 | 46 | 19 |
-| **Regressão final atual** | **78** | **18** | **60** | **28** |
+| **Regressão final atual** | **78** | **17** | **61** | **28** |
 
 Os números menores permanecem nos documentos históricos para mostrar a evolução da cobertura. Para apresentação e avaliação, use o estado final de 78 testes e 28 bugs.
 
@@ -240,7 +237,6 @@ Os números menores permanecem nos documentos históricos para mostrar a evoluç
 - [Complemento de segurança e dependências](docs/security-dependency-concurrency-2026-07-18.md)
 - [Estratégia e limites](docs/strategy-note.md)
 - [Diário de uso de IA](docs/ai-usage-diary.md)
-- [Roteiro de apresentação](docs/presentation-guide.md)
 - [Auditoria completa consolidada](docs/full-system-audit-2026-07-18.md)
 - [Resumo final da regressão](docs/test-summary-deepest-2026-07-18.md)
 

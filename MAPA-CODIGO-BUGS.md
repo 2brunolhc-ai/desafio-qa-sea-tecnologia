@@ -13,11 +13,7 @@ npm run test:bug -- BUG-020
 
 No relatório do Playwright, o mesmo identificador aparece no nome do cenário.
 
-Nos arquivos de teste, cada cenário mantém comentários técnicos curtos sobre objetivo, palavras-chave do Playwright e comando de execução. As marcações de preparação, ação, observação, expectativa e limpeza aparecem somente junto ao trecho correspondente.
-
-A implementação do comando `npm run test:bug` está comentada em `scripts/run-bug.js`. Ela normaliza o ID e usa o filtro `-g` do Playwright para executar os cenários correspondentes.
-
-Para entender também configuração, helpers, mocks, controles positivos e cada faixa dos arquivos de teste, consulte [`docs/GUIA-CODIGO-COMPLETO.md`](docs/GUIA-CODIGO-COMPLETO.md). Para a conferência específica dos dois vídeos de segurança, consulte [`docs/ANALISE-VIDEOS-X-SITE.md`](docs/ANALISE-VIDEOS-X-SITE.md).
+`scripts/run-bug.js` normaliza o ID e usa o filtro `-g` do Playwright. Os comentários no código ficam restritos a decisões não óbvias. A conferência específica dos dois vídeos de segurança está em [`docs/ANALISE-VIDEOS-X-SITE.md`](docs/ANALISE-VIDEOS-X-SITE.md).
 
 | Bug | Comando | Arquivo(s) |
 | --- | --- | --- |
@@ -40,7 +36,7 @@ Para entender também configuração, helpers, mocks, controles positivos e cada
 | BUG-017 | `npm run test:bug -- BUG-017` | `tests/web/shell-navigation-and-content.spec.js` |
 | BUG-018 | `npm run test:bug -- BUG-018` | `tests/web/shell-navigation-and-content.spec.js` |
 | BUG-019 | `npm run test:bug -- BUG-019` | `tests/web/shell-navigation-and-content.spec.js` |
-| BUG-020 | `npm run test:bug -- BUG-020` | `tests/web/deeper-ui-audit.spec.js` |
+| BUG-020 | `npm run test:bug -- BUG-020` | `tests/web/deeper-ui-audit.spec.js`<br>`tests/web/ui-api-consistency.spec.js` |
 | BUG-021 | `npm run test:bug -- BUG-021` | `tests/api/data-integrity-and-concurrency.spec.js` |
 | BUG-022 | `npm run test:bug -- BUG-022` | `tests/api/data-integrity-and-concurrency.spec.js` |
 | BUG-023 | `npm run test:bug -- BUG-023` | `tests/web/deeper-ui-audit.spec.js` |
