@@ -10,10 +10,12 @@ test('[HARDENING-HEADERS-WEB] página aplica headers essenciais de proteção no
   expect.soft(headers['strict-transport-security'] || '').toMatch(/max-age=/i);
   expect.soft(csp).not.toBe('');
   expect.soft(headers['x-content-type-options'] || '').toBe('nosniff');
-  expect.soft(
-    /^(DENY|SAMEORIGIN)$/i.test(headers['x-frame-options'] || '') || /frame-ancestors/i.test(csp),
-    'deve impedir clickjacking com X-Frame-Options ou CSP frame-ancestors',
-  ).toBe(true);
+  expect
+    .soft(
+      /^(DENY|SAMEORIGIN)$/i.test(headers['x-frame-options'] || '') || /frame-ancestors/i.test(csp),
+      'deve impedir clickjacking com X-Frame-Options ou CSP frame-ancestors',
+    )
+    .toBe(true);
   expect.soft(headers['referrer-policy'] || '').not.toBe('');
   expect.soft(headers['permissions-policy'] || '').not.toBe('');
 });
@@ -62,11 +64,6 @@ test('[HARDENING-HEADERS-API] API aplica headers de conteúdo e privacidade nas 
   expect(headers['cache-control'] || '').not.toMatch(/public/i);
 });
 
-/**
- * CONTROLE-TRACE | CONTROLE POSITIVO
- * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
- * A leitura segue: preparar → agir → observar → validar → limpar.
- */
 test('[CONTROLE-TRACE] servidor rejeita o método TRACE', async ({ request }) => {
   const response = await request.fetch(EMPLOYEES_URL, { method: 'TRACE' });
   expect([405, 501]).toContain(response.status());

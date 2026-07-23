@@ -1,29 +1,7 @@
 import { test, expect } from '@playwright/test';
-import {
-  createEmployeeData,
-  createInvalidEmployeeData,
-} from '../helpers/employeeFactory.js';
+import { createEmployeeData, createInvalidEmployeeData } from '../helpers/employeeFactory.js';
 import { cleanupEmployee, createEmployee } from '../helpers/apiHelpers.js';
 
-/**
- * BUG-002 | API/VALIDAÇÃO SERVER-SIDE
- * OBJETIVO: Reutiliza o mesmo fluxo para verificar várias classes de payload inválido.
- * Cada objeto descreve um caso; o loop transforma cada entrada em um teste independente.
- *
- * PALAVRAS-CHAVE:
- * - const: cria uma referência que não será reatribuída.
- * - array [...]: reúne os cenários inválidos em uma única tabela de dados.
- * - title: define o nome exibido no relatório do Playwright.
- * - build: função que monta somente o payload necessário para aquele cenário.
- * - for...of: percorre cada cenário da tabela.
- * - test(...): registra um cenário independente no Playwright.
- * - async/await: espera a requisição terminar antes de validar o resultado.
- * - request: cliente HTTP direto, sem abrir o navegador.
- * - expect(...): compara o status real com os códigos esperados.
- * - try/finally: mantém a limpeza mesmo quando uma expectativa falha.
- *
- * EXECUTAR: npm run test:bug -- BUG-002
- */
 // Casos inválidos reutilizam o mesmo fluxo para manter a cobertura legível e extensível.
 const invalidScenarios = [
   {
@@ -88,7 +66,10 @@ const invalidScenarios = [
     title: '[BUG-002] rejeita funcionário nulo',
     build: () => {
       const { marker } = createInvalidEmployeeData();
-      return { marker, data: { state: { testMarker: marker, employee: null } } };
+      return {
+        marker,
+        data: { state: { testMarker: marker, employee: null } },
+      };
     },
   },
 ];
@@ -96,20 +77,16 @@ const invalidScenarios = [
 // Cada entrada gera um teste independente no relatório do Playwright.
 for (const scenario of invalidScenarios) {
   test(scenario.title, async ({ request }) => {
-    // Preparação: monta somente o payload inválido do cenário atual.
     const { data } = scenario.build();
     let created;
     let response;
 
     try {
-      // Ação: envia o payload diretamente para POST /employees.
       const creation = await createEmployee(request, data);
       response = creation.response;
       if (response.status() === 201) created = creation.body;
-      // Observação e expectativa: o servidor deve rejeitar o payload com 400 ou 422.
       expect([400, 422]).toContain(response.status());
     } finally {
-      // Limpeza: remove o registro caso o produto tenha aceitado o dado inválido.
       await cleanupEmployee(request, created);
     }
   });

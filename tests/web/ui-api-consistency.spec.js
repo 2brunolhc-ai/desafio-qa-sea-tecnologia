@@ -1,22 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { createEmployeeData } from '../helpers/employeeFactory.js';
-import {
-  cleanupEmployee,
-  createEmployee,
-  getEmployeeById,
-} from '../helpers/apiHelpers.js';
-import {
-  fillEmployeeForm,
-  openEmployeeForm,
-  submitAndCaptureEmployee,
-} from '../helpers/webHelpers.js';
+import { cleanupEmployee, createEmployee, getEmployeeById } from '../helpers/apiHelpers.js';
+import { fillEmployeeForm, openEmployeeForm, submitAndCaptureEmployee } from '../helpers/webHelpers.js';
 
-/**
- * CONTROLE-API-PARA-WEB | CONTROLE POSITIVO
- * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
- * A leitura segue: preparar → agir → observar → validar → limpar.
- */
-test('[CONTROLE-API-PARA-WEB] API para interface exibe os campos principais do registro criado', async ({ page, request }) => {
+test('[CONTROLE-API-PARA-WEB] API para interface exibe os campos principais do registro criado', async ({
+  page,
+  request,
+}) => {
   const data = createEmployeeData();
   const employee = data.state.employee;
   let created;
@@ -30,26 +20,22 @@ test('[CONTROLE-API-PARA-WEB] API para interface exibe os campos principais do r
     const name = page.getByText(employee.name, { exact: true });
     await expect(name).toBeVisible();
 
-    const displayedCpf = employee.cpf.replace(
-      /^(\d{3})(\d{3})(\d{3})(\d{2})$/,
-      '$1.$2.$3-$4',
-    );
+    const displayedCpf = employee.cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
 
-    const cardText = await name.evaluate((element, expected) => {
-      let current = element;
-      for (let depth = 0; depth < 6 && current; depth += 1) {
-        const text = current.textContent || '';
-        if (
-          text.includes(expected.cpf) &&
-          text.includes(expected.activity) &&
-          text.includes(expected.role)
-        ) {
-          return text;
+    const cardText = await name.evaluate(
+      (element, expected) => {
+        let current = element;
+        for (let depth = 0; depth < 6 && current; depth += 1) {
+          const text = current.textContent || '';
+          if (text.includes(expected.cpf) && text.includes(expected.activity) && text.includes(expected.role)) {
+            return text;
+          }
+          current = current.parentElement;
         }
-        current = current.parentElement;
-      }
-      return '';
-    }, { ...employee, cpf: displayedCpf });
+        return '';
+      },
+      { ...employee, cpf: displayedCpf },
+    );
 
     expect(cardText).toContain(displayedCpf);
     expect(cardText).toContain(employee.activity);
@@ -59,12 +45,10 @@ test('[CONTROLE-API-PARA-WEB] API para interface exibe os campos principais do r
   }
 });
 
-/**
- * CONTROLE-WEB-PARA-API | CONTROLE POSITIVO
- * Este cenário não representa um dos 28 bugs. Ele funciona como controle ou risco documentado.
- * A leitura segue: preparar → agir → observar → validar → limpar.
- */
-test('[CONTROLE-WEB-PARA-API] interface para API preserva todos os dados preenchidos', async ({ page, request }) => {
+test('[BUG-020] interface para API preserva os dados preenchidos com semântica consistente', async ({
+  page,
+  request,
+}) => {
   const data = createEmployeeData();
   const employee = data.state.employee;
   let created;

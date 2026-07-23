@@ -1,55 +1,29 @@
 # Diário de uso de IA
 
-## Contexto
+Usei o Codex como apoio durante o desafio. A IA participou do planejamento, sugeriu cenários, ajudou a escrever a primeira versão dos testes Playwright, executou comandos e organizou parte da documentação. Eu mantive a identificação dos testes por `BUG-XXX` para conseguir relacionar código, relatório e reprodução manual.
 
-A IA foi usada extensivamente durante uma sessão técnica em 17/07/2026: ajudou a planejar, escrever e revisar a automação, explorar a interface/API, produzir evidências e redigir os documentos. A responsabilidade de validar o comportamento, decidir severidade, preservar dados e aceitar ou rejeitar sugestões permaneceu humana. Nenhum defeito foi incluído apenas porque apareceu em uma sugestão ou na leitura do código do frontend.
+## Onde ajudou
 
-## Onde a IA ajudou
+- estrutura inicial do projeto em testes web, API, helpers e fixtures;
+- levantamento de casos de validação, autorização, responsividade e resiliência;
+- criação de dados sintéticos e de uma rotina defensiva de limpeza;
+- comparação entre comportamento da interface e contrato de `/employees`;
+- revisão dos resultados e organização das evidências.
 
-- Estruturação do plano baseado em risco.
-- Organização do projeto Node.js/Playwright em web, API e helpers.
-- Geração inicial de factory de dados fictícios e limpeza defensiva.
-- Sugestão de cenários de contrato, validação, integração e segurança.
-- Rascunho de documentação, posteriormente confrontado com as execuções.
-- Identificação de trechos relevantes no bundle público para localizar a URL da API e entender o formato `{ state: { employee } }`.
-- Execução de uma segunda rodada profunda com mocks de estados vazio, carregando e erro, lista longa, menus e controles de etapas.
-- Reprodução individual dos menus/etapas no navegador, medição do layout móvel e inspeção mínima do bundle público para relacionar sintomas a handlers ausentes.
-- Geração e revisão visual de três capturas sanitizadas com a lista interceptada como vazia.
-- Transcrição e análise de dois vídeos externos como fontes de hipóteses sobre Supabase, armazenamento de token e validação server-side.
-- Estruturação de um guia integral do código, depois revisado contra os arquivos e a execução real.
+## O que a IA errou e como corrigi
 
-## Sugestões aproveitadas
+1. **Nascimento aparentemente perdido.** Uma interação inicial sugeriu que `birthDay` não era persistido. Repeti o fluxo com Playwright e a comparação UI → API preservou a data. Não registrei esse bug.
+2. **CPF procurado sem máscara.** A primeira asserção buscava `00000000000`, enquanto a tela mostra `000.000.000-00`. Corrigi o teste para validar a transformação real.
+3. **Seletor instável.** Foi sugerido usar IDs como `rc_select_2`, que mudavam após renderização. Substituí por papel/nome quando disponíveis e por atributos `title` do componente Ant Design quando necessário.
+4. **Hipóteses dos vídeos tratadas como possíveis bugs.** Verifiquei o HTML e o bundle antes de concluir. Não encontrei Supabase, `service_role`, `localStorage` ou `sessionStorage`; por isso não criei um falso BUG-029. Os pontos comprovados ficaram ligados aos BUG-001, BUG-002 e BUG-023.
+5. **Excesso de comentários.** A primeira versão explicava palavras básicas e repetia o mesmo bloco em quase todos os testes. Na revisão final removi esse material do código e mantive apenas comentários que justificam decisões técnicas.
 
-- Usar nomes únicos iniciados por `QA Automacao`.
-- Executar limpeza dentro de `finally`.
-- Recusar DELETE quando o registro não possui marcador próprio.
-- Separar testes API e web, mantendo um teste específico de consistência.
-- Usar seletores semânticos para botões e atributos estáveis para inputs e opções.
-- Manter asserções de segurança como falhas reais, em vez de escondê-las com condicionais.
+## Decisões que revisei pessoalmente
 
-## Erros e sugestões rejeitadas
+Conferi severidade, resultado esperado, limites dos mocks e limpeza. Mocks de lista vazia, erro ou JSON malformado provam somente a reação da interface; segurança e integração foram exercitadas contra a API real. PUT, PATCH e DELETE atingiram apenas registros criados pela própria automação. O helper recusa exclusão sem o prefixo `QA Automacao`.
 
-1. **Data de nascimento supostamente perdida.** No navegador integrado, o campo apareceu preenchido no DOM, mas o registro manual chegou com `birthDay` vazio. A hipótese inicial foi de defeito do produto. O fluxo completo executado com Playwright preservou a data e o teste UI → API passou. A hipótese foi rejeitada; o comportamento foi atribuído à forma de interação do primeiro mecanismo de navegador e não entrou no relatório.
-2. **CPF comparado sem máscara.** A primeira asserção API → UI procurou `00000000000`, mas a interface exibe `000.000.000-00`. O erro foi identificado no snapshot da falha. A asserção foi corrigida para validar a transformação real e o teste passou.
-3. **ID de seletor dinâmico.** Durante a exploração, um input Ant Design mudou de `rc_select_2` para `rc_select_3` após renderização. A tentativa baseada nesse ID foi descartada. A automação final usa o atributo `title` da seleção/opção dentro do componente.
-4. **Captura visual em branco.** O primeiro mecanismo de screenshot retornou somente o fundo, apesar da árvore acessível estar carregada. A imagem foi considerada inválida e substituída por capturas produzidas pelo Chromium do Playwright.
-5. **Risco de severidade exagerada.** CORS amplo foi analisado como fator agravante, não como vulnerabilidade crítica isolada. Ausência de headers foi mantida como hardening informativo.
-6. **Expectativa inicial sobre controles secundários.** A primeira ideia foi tratar `Adicionar EPI`, `Adicionar outra atividade` e os ícones como funcionalidades disponíveis. A validação no DOM e no fluxo mostrou que alguns são apenas elementos visuais ou submetem o formulário; os achados foram registrados como defeitos somente quando havia uma affordance clara e uma falha observável.
-7. **Texto supostamente corrompido.** A hipótese de encoding foi confrontada com DOM e screenshot. Os acentos da interface aparecem corretamente; o problema real é conteúdo `Lorem ipsum` literal somado a uma coluna estreita em mobile. O relatório evita chamar isso de corrupção de caracteres.
-8. **“Chave de API exposta” como conclusão automática.** O vídeo diferencia chave pública `anon` de `service_role`, mas uma aplicação diferente não pode ser acusada por analogia. HTML e bundle SEA foram pesquisados e não contêm `supabase` nem `service_role`. Nenhum novo bug de chave foi criado; o defeito comprovado continua sendo o acesso anônimo a `/employees`.
-9. **Token no `localStorage` como bug presumido.** O segundo vídeo sugeriu essa inspeção. O bundle SEA não referencia `localStorage` ou `sessionStorage` e não há login observado. O item foi registrado como não aplicável, sem inventar usuário ou token.
-10. **Frontend público confundido com vulnerabilidade.** A visibilidade do JavaScript é normal na web. A conclusão só foi aceita quando houve impacto observável: validação contornada no POST direto (BUG-002) e entradas inválidas enviadas pela tela (BUG-023).
+Também revisei duas sugestões de severidade: CORS amplo foi mantido como agravante, não como causa principal, e ausência de headers ficou como hardening. O achado prioritário continua sendo o acesso anônimo aos dados e às mutações.
 
-## Validação manual
+## Limites
 
-Foram verificados manualmente a página única, abertura do cadastro, campos, restrições HTML, seletores, filtro, conclusão da etapa, navegação, comportamento após salvar, responsividade e estrutura sanitizada da API. Também foram executados OPTIONS, GET, GET por ID, POST, PUT, PATCH e DELETE, sempre limitando alterações a registros próprios.
-
-Na revisão dos vídeos, o HTML e o bundle público foram verificados por sinais estáticos sem imprimir chaves ou tokens. Ausência de string não prova segurança total; ela apenas impede atribuir ao site as falhas específicas de Supabase/armazenamento mostradas nos vídeos. Os problemas aceitos permaneceram baseados em requisição e resposta reproduzíveis.
-
-## Trabalho ajustado pelo candidato
-
-As decisões finais incluem seleção de escopo, classificação de severidade, definição do resultado esperado, escolha de quais hipóteses não eram bugs, revisão das evidências, remoção de respostas com dados preexistentes e conferência da limpeza. O código sugerido foi executado; falhas de seletor ou expectativa foram corrigidas antes da execução final.
-
-## Conclusão
-
-A IA acelerou levantamento e documentação, mas não foi tratada como fonte de verdade. O critério para aceitar uma descoberta foi reprodução observável, evidência sanitizada e coerência entre exploração e Playwright.
+Não tratei a IA como fonte de verdade. Uma descoberta só entrou no relatório quando havia comportamento reproduzível e evidência sanitizada. Não foram executados carga, exploração invasiva, alteração de registros de terceiros ou uso de documentos reais. Consigo explicar os helpers, os mocks, as expectativas e as limitações dos testes entregues.
