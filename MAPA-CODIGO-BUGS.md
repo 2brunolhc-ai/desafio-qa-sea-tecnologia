@@ -17,6 +17,8 @@ Nos arquivos de teste, cada cenário mantém comentários técnicos curtos sobre
 
 A implementação do comando `npm run test:bug` está comentada em `scripts/run-bug.js`. Ela normaliza o ID e usa o filtro `-g` do Playwright para executar os cenários correspondentes.
 
+Para entender também configuração, helpers, mocks, controles positivos e cada faixa dos arquivos de teste, consulte [`docs/GUIA-CODIGO-COMPLETO.md`](docs/GUIA-CODIGO-COMPLETO.md). Para a conferência específica dos dois vídeos de segurança, consulte [`docs/ANALISE-VIDEOS-X-SITE.md`](docs/ANALISE-VIDEOS-X-SITE.md).
+
 | Bug | Comando | Arquivo(s) |
 | --- | --- | --- |
 | BUG-001 | `npm run test:bug -- BUG-001` | `tests/api/employees-methods-and-cache.spec.js`<br>`tests/api/employees-security.spec.js` |

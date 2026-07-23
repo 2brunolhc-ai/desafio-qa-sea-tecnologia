@@ -1,0 +1,2 @@
+# PDFs are binary artifacts. Line-ending conversion would invalidate their byte offsets.
+*.pdf binary
