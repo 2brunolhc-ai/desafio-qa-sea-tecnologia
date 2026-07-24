@@ -17,7 +17,7 @@ npm run test:bug -- BUG-020
 
 Cada teste relacionado a bug recebeu um bloco de comentários com objetivo, preparação, ação, observação, expectativa, limpeza e explicação das palavras principais do Playwright. O mapa completo está em [`MAPA-CODIGO-BUGS.md`](MAPA-CODIGO-BUGS.md).
 
-Para estudar o projeto, use o [`guia completo do código`](docs/GUIA-CODIGO-COMPLETO.md). Ele cobre `package.json`, configuração, script por BUG, helpers, fixture e os 14 arquivos de teste, explicando linha/bloco, motivo, limite e fala sugerida.
+Para estudar o projeto, use o [`guia completo do código`](docs/GUIA-CODIGO-COMPLETO.md). Ele cobre `package.json`, configuração, script por BUG, helpers, fixture e os 14 arquivos de teste, explicando linha/bloco, motivo, limite.
 
 ### Como funciona o comando por bug
 
