@@ -119,7 +119,3 @@ A suíte passou de 49 para 61 testes: 15 aprovados e 46 reprovados. A nova demon
 ### Qual achado novo devo demonstrar primeiro?
 
 `BUG-020`. Mostre os dois testes de `usesEpi`: EPI preenchido produz `false`, e a opção de não usar EPI produz `true`. Explique o impacto como integridade de dado ocupacional, mostre o mapeamento no bundle apenas como causa auxiliar e recomende correção do contrato mais revisão dos registros afetados.
-
-### Os problemas mostrados nos dois vídeos existem no site?
-
-As hipóteses foram verificadas, não presumidas. O HTML e o bundle SEA não contêm `supabase`, `service_role`, `localStorage` ou `sessionStorage`; portanto, não foi criado bug de chave ou token. O princípio aplicável foi comprovado de outra forma: a API aceita CRUD anônimo (BUG-001), payloads inválidos enviados diretamente (BUG-002) e a tela envia CPF alfabético/data futura (BUG-023). A fala recomendada está em `docs/ANALISE-VIDEOS-X-SITE.md`.

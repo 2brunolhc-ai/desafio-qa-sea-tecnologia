@@ -511,28 +511,6 @@ Não se troca a expectativa para 200 apenas para “ficar verde”, pois isso tr
 - DELETE é recusado se não houver marcador de posse;
 - após a execução completa foi conferido `0` registro com prefixo QA restante.
 
-## Relação com os dois vídeos analisados
-
-### Vídeo sobre Supabase, chave pública e RLS
-
-O ensinamento aproveitado é separar **presença de chave pública** de **autorização realmente quebrada**. Uma chave `anon` pode ser pública por projeto; `service_role` no frontend seria crítico; RLS/controle server-side é que deve limitar dados.
-
-Na aplicação SEA:
-
-- bundle e HTML não contêm `supabase` nem `service_role`;
-- portanto, não existe prova para criar um bug “chave Supabase exposta”;
-- a prova real é independente da tecnologia: `/employees` aceita leitura e mutações anônimas, cobertas por BUG-001.
-
-### Vídeo sobre localStorage e validação de frontend
-
-O ensinamento aproveitado é que validação do browser pode ser contornada por requisição direta. Na aplicação SEA:
-
-- bundle não contém uso de `localStorage` ou `sessionStorage` e não há login observado; logo esse item ficou **não aplicável**, não “aprovado” genericamente;
-- POST direto aceita payloads inválidos: BUG-002;
-- a própria UI também envia CPF alfabético e nascimento futuro: BUG-023.
-
-Não se deve colar token real em site de terceiros para decodificar JWT. Em trabalho profissional, a inspeção deve ser local e com dados redigidos.
-
 ## Comandos para estudar e demonstrar
 
 ```bash
@@ -580,10 +558,6 @@ npm run test:report
 ### “O mock prova um bug da API?”
 
 “Não. Ele prova como a UI reage a uma resposta controlada. Os testes de API real ficam separados.”
-
-### “Encontrou `service_role` ou token no navegador?”
-
-“Não. HTML e bundle não contêm Supabase, `service_role`, `localStorage` ou `sessionStorage`. Eu não transformei o conteúdo do vídeo em falso positivo; mantive os bugs comprovados de autorização e validação.”
 
 ### “Qual é a maior limitação?”
 

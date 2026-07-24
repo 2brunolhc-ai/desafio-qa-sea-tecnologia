@@ -66,7 +66,6 @@ A suíte completa termina com código de saída `1` enquanto o produto continuar
 Relatórios principais:
 
 - [Guia completo do código para estudar e apresentar](docs/GUIA-CODIGO-COMPLETO.md)
-- [Análise dos vídeos de segurança aplicada ao site](docs/ANALISE-VIDEOS-X-SITE.md)
 - [Manual em PDF para reproduzir manualmente os 28 bugs](docs/manual-pratico-reproducao-manual-28-bugs-sea.pdf)
 - [Revalidação final de 23/07/2026](docs/revalidacao-2026-07-23.md)
 - [Auditoria completa consolidada](docs/full-system-audit-2026-07-18.md)

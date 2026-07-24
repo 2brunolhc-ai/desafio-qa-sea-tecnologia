@@ -34,7 +34,3 @@ O código de saída da regressão completa é `1` porque as expectativas descrev
 - checklist final com 8 itens legíveis;
 - nenhuma marca `(cid:...)` na extração de texto;
 - instrução do BUG-017 corrigida para mostrar explicitamente as tags HTML e HEAD.
-
-## Conferência dos vídeos
-
-Não foi comprovado um 29º bug. HTML e bundle não apresentaram `supabase`, `service_role`, `localStorage` ou `sessionStorage`. As hipóteses aplicáveis correspondem aos defeitos já provados BUG-001, BUG-002 e BUG-023.

@@ -15,7 +15,6 @@ A IA foi usada extensivamente durante uma sessão técnica em 17/07/2026: ajudou
 - Execução de uma segunda rodada profunda com mocks de estados vazio, carregando e erro, lista longa, menus e controles de etapas.
 - Reprodução individual dos menus/etapas no navegador, medição do layout móvel e inspeção mínima do bundle público para relacionar sintomas a handlers ausentes.
 - Geração e revisão visual de três capturas sanitizadas com a lista interceptada como vazia.
-- Transcrição e análise de dois vídeos externos como fontes de hipóteses sobre Supabase, armazenamento de token e validação server-side.
 - Estruturação de um guia integral do código, depois revisado contra os arquivos e a execução real.
 
 ## Sugestões aproveitadas
@@ -36,15 +35,11 @@ A IA foi usada extensivamente durante uma sessão técnica em 17/07/2026: ajudou
 5. **Risco de severidade exagerada.** CORS amplo foi analisado como fator agravante, não como vulnerabilidade crítica isolada. Ausência de headers foi mantida como hardening informativo.
 6. **Expectativa inicial sobre controles secundários.** A primeira ideia foi tratar `Adicionar EPI`, `Adicionar outra atividade` e os ícones como funcionalidades disponíveis. A validação no DOM e no fluxo mostrou que alguns são apenas elementos visuais ou submetem o formulário; os achados foram registrados como defeitos somente quando havia uma affordance clara e uma falha observável.
 7. **Texto supostamente corrompido.** A hipótese de encoding foi confrontada com DOM e screenshot. Os acentos da interface aparecem corretamente; o problema real é conteúdo `Lorem ipsum` literal somado a uma coluna estreita em mobile. O relatório evita chamar isso de corrupção de caracteres.
-8. **“Chave de API exposta” como conclusão automática.** O vídeo diferencia chave pública `anon` de `service_role`, mas uma aplicação diferente não pode ser acusada por analogia. HTML e bundle SEA foram pesquisados e não contêm `supabase` nem `service_role`. Nenhum novo bug de chave foi criado; o defeito comprovado continua sendo o acesso anônimo a `/employees`.
-9. **Token no `localStorage` como bug presumido.** O segundo vídeo sugeriu essa inspeção. O bundle SEA não referencia `localStorage` ou `sessionStorage` e não há login observado. O item foi registrado como não aplicável, sem inventar usuário ou token.
-10. **Frontend público confundido com vulnerabilidade.** A visibilidade do JavaScript é normal na web. A conclusão só foi aceita quando houve impacto observável: validação contornada no POST direto (BUG-002) e entradas inválidas enviadas pela tela (BUG-023).
+8. **Frontend público confundido com vulnerabilidade.** A visibilidade do JavaScript é normal na web. A conclusão só foi aceita quando houve impacto observável: validação contornada no POST direto (BUG-002) e entradas inválidas enviadas pela tela (BUG-023).
 
 ## Validação manual
 
 Foram verificados manualmente a página única, abertura do cadastro, campos, restrições HTML, seletores, filtro, conclusão da etapa, navegação, comportamento após salvar, responsividade e estrutura sanitizada da API. Também foram executados OPTIONS, GET, GET por ID, POST, PUT, PATCH e DELETE, sempre limitando alterações a registros próprios.
-
-Na revisão dos vídeos, o HTML e o bundle público foram verificados por sinais estáticos sem imprimir chaves ou tokens. Ausência de string não prova segurança total; ela apenas impede atribuir ao site as falhas específicas de Supabase/armazenamento mostradas nos vídeos. Os problemas aceitos permaneceram baseados em requisição e resposta reproduzíveis.
 
 ## Trabalho ajustado pelo candidato
 
