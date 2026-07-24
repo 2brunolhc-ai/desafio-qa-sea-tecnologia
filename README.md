@@ -215,7 +215,7 @@ Os testes que criam dados chamam a limpeza no `finally`. Assim, mesmo que uma as
 | Auditoria completa do shell | 61 | 15 | 46 | 19 |
 | **Regressão final atual** | **78** | **18** | **60** | **28** |
 
-Os números menores permanecem nos documentos históricos para mostrar a evolução da cobertura. Para apresentação e avaliação, use o estado final de 78 testes e 28 bugs.
+Os números menores permanecem nos documentos históricos para mostrar a evolução da cobertura.
 
 ## Evidências e privacidade
 
